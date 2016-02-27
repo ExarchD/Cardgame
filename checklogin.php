@@ -24,14 +24,11 @@ $sql="SELECT * FROM $tbl_name WHERE username='$myusername' and password='$mypass
 $result=mysqli_query($conn,$sql);
 
 $row=mysqli_fetch_array($result,MYSQLI_NUM);
-printf ("%s (%s)\n",$row[0],$row[1]);
 
 $row_cnt = $result->num_rows;
-printf("Result set has %d rows.\n", $row_cnt);
 
 // If result matched $myusername and $mypassword, table row must be 1 row
 if($row_cnt==1){
-
 // Register $myusername, $mypassword and redirect to file "login_success.php"
 session_register("myusername");
 session_register("mypassword");
