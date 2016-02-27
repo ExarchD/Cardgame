@@ -809,8 +809,8 @@ game_core.prototype.client_update_physics = function() {
 game_core.prototype.client_update = function() {
 
         //Clear the screen area
-    this.ctx.clearRect(0,0,2080,1200);
-
+ //   this.ctx.clearRect(0,0,2080,1200);
+	this.ctx.clearRect(900,900,1100,1100);	
         //draw help/information if required
     this.client_draw_info();
 
