@@ -2,87 +2,169 @@
 /* CSS Document */
 
 body {
-        padding-bottom: 40px;
-        background-color: #f7f7f7;
-      }
+	padding-bottom: 40px;
+	background-color: #f7f7f7;
+}
 .container
 {
- margin-top:80px;
+	margin-top:80px;
 }
 h2
 {
- font-family:Tahoma, Geneva, sans-serif;
- color:#00a2d1;
+	font-family:Tahoma, Geneva, sans-serif;
+	color:#00a2d1;
 }
 .form-container
 {
- width:500px;
- margin:0 auto;
- background:#fff;
- padding: 25px;
- box-shadow: 0px 0px 2px rgba(0,0,0,0.4);
- border-radius:3px;
+	width:500px;
+	margin:0 auto;
+	background:#fff;
+	padding: 25px;
+	box-shadow: 0px 0px 2px rgba(0,0,0,0.4);
+	border-radius:3px;
 }
 button
 {
- font-family:Verdana, Geneva, sans-serif;
- font-size:25px;
+	font-family:Verdana, Geneva, sans-serif;
+	font-size:25px;
 }
 label
 {
- font-family:Tahoma, Geneva, sans-serif;
- color:.00a9d1;
+	font-family:Tahoma, Geneva, sans-serif;
+	color:.00a9d1;
 }
 a
 {
- text-decoration:underline;
+	text-decoration:underline;
 }
 
 /* home page style */
 
 .header
 {
- text-align:center;
- font-size:25px;
- color:#fff;
- background:#00a2d1;
- height:60px;
- width:100%;
+	text-align:center;
+	font-size:25px;
+	color:#fff;
+	background:#00a2d1;
+	height:60px;
+	width:100%;
 }
 .header a
 {
- color:#f9f9f9;
- font-family:Verdana, Geneva, sans-serif;
- font-size:25px;
- text-decoration:none;
- position:relative;
- top:15px;
+	color:#f9f9f9;
+	font-family:Verdana, Geneva, sans-serif;
+	font-size:25px;
+	text-decoration:none;
+	position:relative;
+	top:15px;
 }
 .header .left
 {
- float:left;
- position:relative;
- left:150px;
+	float:left;
+	position:relative;
+	left:150px;
 }
 .header .right
 {
- float:right;
- position:relative;
- right:150px;
+	float:right;
+	position:relative;
+	right:150px;
 }
 .content
 {
- margin:0 auto;
- margin-top:100px;
- text-align:center;
- font-family:"Lucida Sans Unicode", "Lucida Grande", sans-serif;
- font-size:55px;
- color:#00a2d1;
+	margin:0 auto;
+	margin-top:40px;
+	text-align:center;
+	font-family:"Lucida Sans Unicode", "Lucida Grande", sans-serif;
+	font-size:55px;
+	color:#00a2d1;
 }
 .content p
 {
- font-size:30px;
- color:#004567;
- width:800px;
- margin:0 auto;
+	font-size:30px;
+	color:#004567;
+	width:800px;
+	margin:0 auto;
+}
+
+.content .left
+{
+	float:left;
+	position:relative;
+	left:150px;
+}
+.content .games
+{
+	margin:0 auto;
+	margin-top:30px;
+	text-align:left;
+	font-family:"Lucida Sans Unicode", "Lucida Grande", sans-serif;
+	font-size:25px;
+	color:#00a2d1;
+}
+
+.content .games .left
+{
+	float:left;
+	position:relative;
+	left:0px;
+}
+.content .games .left  ul
+{
+	list-style-type:none;
+	height:220px;
+	width:120px;
+	border:1px solid #ccc;
+	font:16px/26px Georgia, Garamond, Serif;
+	overflow:auto;
+}
+
+
+.content .games .right
+{
+	float:left;
+	position:relative;
+	left:0px;
+	height:220px;
+	width:550px;
+	margin-left:20px;
+}
+.content .games .right  ul
+{
+	list-style-type:none;
+	height:220px;
+	width:520px;
+	border:1px solid #ccc;
+	font:16px/26px Georgia, Garamond, Serif;
+}
+
+.content .games .right .sub
+{
+	height:220px;
+	margin-top:16px;
+	width:100%;
+	overflow:auto;
+}
+.content .games .right .sub table
+{
+	font:16px/26px Georgia, Garamond, Serif;
+	border:1px solid #ccc;
+	border-collapse: collapse;
+	overflow:auto;
+	/* table-layout:fixed; */
+}
+
+.content .games .right .sub td
+{
+	border: 1px solid black;
+	border-collapse: collapse;
+}
+.content .games .right .sub th
+{
+	border: 1px solid black;
+	border-collapse: collapse;
+}
+.content .games .right .sub  td th
+{
+	padding: 15px;
 }
