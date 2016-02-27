@@ -220,7 +220,7 @@
                 var game_instance = this.games[gameid];
 
                     //If the game is a player short
-                if(game_instance.player_count < 2) {
+                if(game_instance.player_count < 4) {
 
                         //someone wants us to join!
                     joined_a_game = true;
