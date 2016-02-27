@@ -413,13 +413,20 @@ game_core.prototype.server_update_physics = function() {
     var other_new_dir = this.process_input(this.players.other);
     this.players.other.pos = this.v_add( this.players.other.old_state.pos, other_new_dir);
 
+	    //Handle player three
+    this.players.other2.old_state.pos = this.pos( this.players.other2.pos );
+    var other2_new_dir = this.process_input(this.players.other2);
+    this.players.other2.pos = this.v_add( this.players.other2.old_state.pos, other_new_dir);
+
+	
         //Keep the physics position in the world
     this.check_collision( this.players.self );
     this.check_collision( this.players.other );
-
+    this.check_collision( this.players.other2 );
+	
     this.players.self.inputs = []; //we have cleared the input buffer, so remove this
     this.players.other.inputs = []; //we have cleared the input buffer, so remove this
-
+	this.players.other2.inputs = []; //we have cleared the input buffer, so remove this
 }; //game_core.server_update_physics
 
     //Makes sure things run smoothly and notifies clients of changes
@@ -433,8 +440,10 @@ game_core.prototype.server_update = function(){
     this.laststate = {
         hp  : this.players.self.pos,                //'host position', the game creators position
         cp  : this.players.other.pos,               //'client position', the person that joined, their position
+	    cp  : this.players.other2.pos,               //'client position', the person that joined, their position
         his : this.players.self.last_input_seq,     //'host input sequence', the last input we processed for the host
         cis : this.players.other.last_input_seq,    //'client input sequence', the last input we processed for the client
+        cis : this.players.other2.last_input_seq,    //'client input sequence', the last input we processed for the client
         t   : this.server_time                      // our current local time on the server
     };
 
@@ -447,7 +456,9 @@ game_core.prototype.server_update = function(){
     if(this.players.other.instance) {
         this.players.other.instance.emit( 'onserverupdate', this.laststate );
     }
-
+    if(this.players.other2.instance) {
+        this.players.other2.instance.emit( 'onserverupdate', this.laststate );
+    }
 }; //game_core.server_update
 
 
@@ -678,6 +689,9 @@ game_core.prototype.client_process_net_updates = function() {
         this.ghosts.server_pos_other.pos = this.pos(other_server_pos);
         this.ghosts.pos_other.pos = this.v_lerp(other_past_pos, other_target_pos, time_point);
 
+   
+		
+		
         if(this.client_smoothing) {
             this.players.other.pos = this.v_lerp( this.players.other.pos, this.ghosts.pos_other.pos, this._pdt*this.client_smooth);
         } else {
