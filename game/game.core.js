@@ -71,6 +71,7 @@ if('undefined' != typeof(global)) frame_time = 45; //on server we run at 45ms, 2
             this.players = {
                 self : new game_player(this,this.instance.player_host),
                 other : new game_player(this,this.instance.player_client)
+
             };
 
            this.players.self.pos = {x:40,y:40};
@@ -108,7 +109,7 @@ if('undefined' != typeof(global)) frame_time = 45; //on server we run at 45ms, 2
         }
 
             //The speed at which the clients move.
-        this.playerspeed = 12000;
+        this.playerspeed = 1200;
 
             //Set up some physics integration values
         this._pdt = 0.0001;                 //The physics update delta time
