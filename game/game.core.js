@@ -209,7 +209,7 @@ game_core.prototype.v_lerp = function(v,tv,t) { return { x: this.lerp(v.x, tv.x,
 
             //Set up initial values for our state information
         this.pos = { x:0, y:0 };
-        this.size = { x:64, y:16, hx:16, hy:16 };
+        this.size = { x:16, y:16, hx:16, hy:16 };
         this.state = 'not-connected';
         this.color = 'rgba(255,255,255,0.1)';
         this.info_color = 'rgba(255,255,255,0.1)';
