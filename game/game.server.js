@@ -146,7 +146,7 @@
             thegame.gamecore.stop_update();
 
                 //if the game has two players, the one is leaving
-            if(thegame.player_count > 1) {
+            if(thegame.player_count > 3) {
 
                     //send the players the message the game is ending
                 if(userid == thegame.player_host.userid) {
