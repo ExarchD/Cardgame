@@ -490,7 +490,7 @@ game_core.prototype.client_handle_input = function(){
         this.keyboard.pressed('left')) {
 
             x_dir = -1;
-            input.push('l');
+            input.push('r');
 
         } //left
 
@@ -498,7 +498,7 @@ game_core.prototype.client_handle_input = function(){
         this.keyboard.pressed('right')) {
 
             x_dir = 1;
-            input.push('r');
+            input.push('l');
 
         } //right
 
@@ -506,7 +506,7 @@ game_core.prototype.client_handle_input = function(){
         this.keyboard.pressed('down')) {
 
             y_dir = 1;
-            input.push('d');
+            input.push('u');
 
         } //down
 
@@ -514,7 +514,7 @@ game_core.prototype.client_handle_input = function(){
         this.keyboard.pressed('up')) {
 
             y_dir = -1;
-            input.push('u');
+            input.push('d');
 
         } //up
 
