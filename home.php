@@ -2,7 +2,7 @@
 include_once 'dbconfig.php';
 if(!$user->is_loggedin())
 {
- $user->redirect('index.php');
+	$user->redirect('index.php');
 }
 $user_id = $_SESSION['user_session'];
 $stmt = $DB_con->prepare("SELECT * FROM users_new WHERE user_id=:user_id");
@@ -28,7 +28,147 @@ $userRow=$stmt->fetch(PDO::FETCH_ASSOC);
     </div>
 </div>
 <div class="content">
-welcome : <?php print($userRow['user_name']); ?>
+ <div class="left">
+Welcome : <?php print($userRow['user_name']); ?>
+<div class="games">
+ <div class="left">
+Players:
+<ul>
+      <li>Player 1</li>
+      <li>Player 2</li>
+      <li>Player 3</li>
+      <li>Player 4</li>
+      <li>Player 5</li>
+      <li>Player 6</li> 
+      <li>Player 7</li> 
+      <li>Player 8</li>
+      <li>Player 9</li>
+      <li>Player 10</li>
+      <li>Player 11</li>
+      <li>Player 13</li>
+      <li>Player 13</li>
+  </ul>
+    </div>
+ <div class="right">
+Games:
+<div class="sub">
+<table style="width:100%">
+  <tr>
+    <td> <a href="http://127.0.0.1:4004">Test</a> </td>
+    <td>Silly test game</td>
+    <td>?/?</td>
+  </tr>
+  <tr>
+    <td>Eve</td>
+    <td>Jackson</td>
+    <td>94</td>
+  </tr>
+  <tr>
+    <td>John</td>
+    <td>Doe</td>
+    <td>80</td>
+  </tr>
+  <tr>
+    <td>John</td>
+    <td>Doe</td>
+    <td>80</td>
+  </tr>
+  <tr>
+    <td>John</td>
+    <td>Doe</td>
+    <td>80</td>
+  </tr>
+  <tr>
+    <td>John</td>
+    <td>Doe</td>
+    <td>80</td>
+  </tr>
+  <tr>
+    <td>John</td>
+    <td>Doe</td>
+    <td>80</td>
+  </tr>
+  <tr>
+    <td>John</td>
+    <td>Doe</td>
+    <td>80</td>
+  </tr>
+  <tr>
+    <td>John</td>
+    <td>Doe</td>
+    <td>80</td>
+  </tr>
+  <tr>
+    <td>John</td>
+    <td>Doe</td>
+    <td>80</td>
+  </tr>
+  <tr>
+    <td>John</td>
+    <td>Doe</td>
+    <td>80</td>
+  </tr>
+  <tr>
+    <td>John</td>
+    <td>Doe</td>
+    <td>80</td>
+  </tr>
+  <tr>
+    <td>John</td>
+    <td>Doe</td>
+    <td>80</td>
+  </tr>
+  <tr>
+    <td>John</td>
+    <td>Doe</td>
+    <td>80</td>
+  </tr>
+  <tr>
+    <td>John</td>
+    <td>Doe</td>
+    <td>80</td>
+  </tr>
+  <tr>
+    <td>John</td>
+    <td>Doe</td>
+    <td>80</td>
+  </tr>
+  <tr>
+    <td>John</td>
+    <td>Doe</td>
+    <td>80</td>
+  </tr>
+  <tr>
+    <td>John</td>
+    <td>Doe</td>
+    <td>80</td>
+  </tr>
+  <tr>
+    <td>John</td>
+    <td>Doe</td>
+    <td>80</td>
+  </tr>
+  <tr>
+    <td>John</td>
+    <td>Doe</td>
+    <td>80</td>
+  </tr>
+  <tr>
+    <td>John</td>
+    <td>Doe</td>
+    <td>80</td>
+  </tr>
+  <tr>
+    <td>John</td>
+    <td>Doe</td>
+    <td>80</td>
+  </tr>
+</table>
 </div>
+    </div>
+    </div>
+</div>
+</div>
+
 </body>
 </html>
