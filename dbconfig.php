@@ -1,5 +1,7 @@
 <?php
 
+
+include_once 'redis.php';
 session_start();
 
 $DB_host = "localhost";
