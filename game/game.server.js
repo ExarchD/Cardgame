@@ -219,10 +219,10 @@
                     //get the game we are checking against
                 var game_instance = this.games[gameid];
 
-		console.log('\t socket.io:: player count ' + player_count + ' connected');
-		console.log('\t socket.io:: player count ' + player_count + ' connected');
-		console.log('\t socket.io:: player count ' + player_count + ' connected');
-		console.log('\t socket.io:: player count ' + player_count + ' connected');
+		console.log('\t socket.io:: player count ' + game_instance.player_count + ' connected');
+		console.log('\t socket.io:: player count ' + game_instance.player_count + ' connected');
+		console.log('\t socket.io:: player count ' + game_instance.player_count + ' connected');
+		console.log('\t socket.io:: player count ' + game_instance.player_count + ' connected');
                     //If the game is a player short
                 if(game_instance.player_count < 4) {
 
