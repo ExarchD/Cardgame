@@ -1,4 +1,5 @@
 <?php
+include 'redis.php';
 session_start();
 
 if(!isset($_SESSION['user']))

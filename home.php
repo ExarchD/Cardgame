@@ -54,9 +54,9 @@ Games:
 <div class="sub">
 <table style="width:100%">
   <tr>
-    <td>Jill</td>
-    <td>Smith</td>
-    <td>50</td>
+    <td> <a href="http://127.0.0.1:4004">Test</a> </td>
+    <td>Silly test game</td>
+    <td>?/?</td>
   </tr>
   <tr>
     <td>Eve</td>
@@ -169,5 +169,6 @@ Games:
     </div>
 </div>
 </div>
+
 </body>
 </html>
