@@ -73,7 +73,7 @@ if('undefined' != typeof(global)) frame_time = 45; //on server we run at 45ms, 2
                 other : new game_player(this,this.instance.player_client)
             };
 
-           this.players.self.pos = {x:20,y:20};
+           this.players.self.pos = {x:40,y:40};
 
         } else {
 
@@ -108,7 +108,7 @@ if('undefined' != typeof(global)) frame_time = 45; //on server we run at 45ms, 2
         }
 
             //The speed at which the clients move.
-        this.playerspeed = 120;
+        this.playerspeed = 12000;
 
             //Set up some physics integration values
         this._pdt = 0.0001;                 //The physics update delta time
@@ -208,7 +208,7 @@ game_core.prototype.v_lerp = function(v,tv,t) { return { x: this.lerp(v.x, tv.x,
 
             //Set up initial values for our state information
         this.pos = { x:0, y:0 };
-        this.size = { x:16, y:16, hx:8, hy:8 };
+        this.size = { x:64, y:16, hx:16, hy:16 };
         this.state = 'not-connected';
         this.color = 'rgba(255,255,255,0.1)';
         this.info_color = 'rgba(255,255,255,0.1)';
