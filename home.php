@@ -54,12 +54,12 @@ Games:
 <div class="sub">
 <table style="width:100%">
   <tr>
-    <td> <a href="http://127.0.0.1:4004">Test</a> </td>
+    <td> <a href=":4004/?">Test absolute</a>
     <td>Silly test game</td>
     <td>?/?</td>
   </tr>
   <tr>
-    <td>Eve</td>
+    <td><a href="/?" onclick="javascript:event.target.port=4004">Look at another port</a></td>
     <td>Jackson</td>
     <td>94</td>
   </tr>
