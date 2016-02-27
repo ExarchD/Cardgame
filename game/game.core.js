@@ -60,8 +60,8 @@ if('undefined' != typeof(global)) frame_time = 45; //on server we run at 45ms, 2
 
             //Used in collision etc.
         this.world = {
-            width : 1080,
-            height : 600
+            width : 2080,
+            height : 1200
         };
 
             //We create a player set, passing them
