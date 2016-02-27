@@ -31,7 +31,7 @@ if(isset($_POST['btn-signup']))
    {
       try
       {
-         $stmt = $DB_con->prepare("SELECT user_name,user_email FROM users WHERE user_name=:uname OR user_email=:umail");
+         $stmt = $DB_con->prepare("SELECT user_name,user_email FROM users_new WHERE user_name=:uname OR user_email=:umail");
          $stmt->execute(array(':uname'=>$uname, ':umail'=>$umail));
          $row=$stmt->fetch(PDO::FETCH_ASSOC);
     
@@ -45,7 +45,7 @@ if(isset($_POST['btn-signup']))
          {
             if($user->register($fname,$lname,$uname,$umail,$upass)) 
             {
-                $user->redirect('sign-up.php?joined');
+                $user->redirect('register.php?joined');
             }
          }
      }
