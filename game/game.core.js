@@ -70,8 +70,8 @@ if('undefined' != typeof(global)) frame_time = 45; //on server we run at 45ms, 2
 
             this.players = {
                 self : new game_player(this,this.instance.player_host),
-                other : new game_player(this,this.instance.player_client)
-
+                other : new game_player(this,this.instance.player_client),
+				other2 : new game_player(this,this.instance.player_client)
             };
 
            this.players.self.pos = {x:40,y:40};
@@ -80,7 +80,8 @@ if('undefined' != typeof(global)) frame_time = 45; //on server we run at 45ms, 2
 
             this.players = {
                 self : new game_player(this),
-                other : new game_player(this)
+                other : new game_player(this),
+				other2 : new game_player(this)
             };
 
                 //Debugging ghosts, to help visualise things
