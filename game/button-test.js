@@ -1,11 +1,9 @@
 var game = new Phaser.Game(800, 600, Phaser.AUTO, 'button-test', { preload: preload, create: create });
 
-test
-
 function preload() {
 
-    game.load.spritesheet('button', 'assets/buttons/button_sprite_sheet.png', 193, 71);
-    game.load.image('background','assets/misc/starfield.jpg');
+    game.load.spritesheet('button', 'assets/button_sprite_sheet.png', 193, 71);
+    game.load.image('background','assets/starfield.jpg');
 
 }
 
