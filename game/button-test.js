@@ -6,8 +6,8 @@ function preload() {
     game.load.image('background','assets/starfield.jpg');
 
 }
-
-var button;
+var card_number = 5;
+var button = new Array();
 var background;
 
 function create() {
@@ -16,11 +16,15 @@ function create() {
 
     background = game.add.tileSprite(0, 0, 800, 600, 'background');
 
-    button = game.add.button(game.world.centerX - 95, 400, 'button', actionOnClick, this, 2, 1, 0);
+    for (i=0; i < card_number; i++)
+    {
+	    var number = 45 + 40*i;
+    button[i] = game.add.button(game.world.centerX - number, 400, 'button', actionOnClick, this, 2, 1, 0);
+    button[i].onInputOver.add(over, this);
+    button[i].onInputOut.add(out, this);
+    button[i].onInputUp.add(up, this);
+    }
 
-    button.onInputOver.add(over, this);
-    button.onInputOut.add(out, this);
-    button.onInputUp.add(up, this);
 
 }
 
