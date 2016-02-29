@@ -21,7 +21,7 @@ function create() {
 	
 	var xPixFromCenter;
 	var yPix = 400;
-	var xPix_FirstCard = 120;
+	var xPix_FirstCard = -120;
 	var xPix_spacing = 120;
 	
     for (i=0; i < card_number; i++)
@@ -29,7 +29,7 @@ function create() {
 	    var xPixFromCenter = xPix_FirstCard + xPix_spacing*i; //spacing is 40 pixels
 		
 		//Button constructor, upFrame is left blank, not used
-		button[i] = game.add.button(game.world.centerX - xPixFromCenter, yPix, 'button', actionOnClick, this, 2, 1, 0);
+		button[i] = game.add.button(game.world.centerX + xPixFromCenter, yPix, 'button', actionOnClick, this, 2, 1, 0);
 		button[i].onInputOver.add(over, this);
 		button[i].onInputOut.add(out, this);
 		button[i].onInputUp.add(up, this);
