@@ -26,7 +26,7 @@ var Card = function Card(suit, rank)
 
 var Deck = function Deck()
 {
-	var cardArray = new Card[];
+	var cardArray = Card[];
 	this.fillDeck();
 };
 
@@ -40,7 +40,7 @@ Deck.prototype.fillDeck() = function()
 	{
 		for( int fillRanks = 2; fillRanks < 15; fillSuits++)
 		{
-			this.cardArray.add( Card( suitArray[fillSuits], fillRanks);
+			this.cardArray.add( new Card( suitArray[fillSuits], fillRanks));
 		}
 	}
 };
