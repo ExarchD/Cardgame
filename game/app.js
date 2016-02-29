@@ -92,13 +92,18 @@ server.listen(gameport)
 			}
 			try {
 			clientid = JSON.parse(result).user_session[0];
-			console.log("result exist");
+			// console.log("result exist");
 			console.log(clientid);
+			app.get( '/lobby', function( req, res ){
+			console.log('trying to load %s', __dirname + '/lobby.html');
+			res.sendfile( '/' , { root:__dirname });
+			});
 			app.get( '/', function( req, res ){
 			console.log('trying to load %s', __dirname + '/index.html');
 			res.sendfile( '/index.html' , { root:__dirname });
 			});
-        		res.sendfile( __dirname + '/' + file );
+			res.sendfile( '/' , { root:__dirname });
+        		// res.sendfile( __dirname + '/' + file );
 			}
 			catch(err) {
 			console.log("session does not exist");
@@ -135,6 +140,7 @@ server.listen(gameport)
 //client connections looking for a game, creating games,
 //leaving games, joining games and ending games when they leave.
 game_server = require('./game.server.js');
+// lobby = require('./lobby-test.js');
 
 //Socket.io will call this function when a client connects,
 //So we can send that client looking for a game to play,
@@ -145,7 +151,7 @@ sio.sockets.on('connection', function (client) {
 	//Generate a new UUID, looks something like
 	//5b2ca132-64bd-4513-99da-90e838ca47d1
 	//and store this on their socket/connection
-	client.userid = UUID();
+	client.userid = clientid;
 
 	//tell the player they connected, giving them their id
 	client.emit('onconnected', { id: client.userid } );
