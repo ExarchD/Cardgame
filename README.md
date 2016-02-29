@@ -1,10 +1,10 @@
-Realtime Multiplayer In HTML5
+A Functional Multiplayer Cardgame in Javascript and using Node js
 =============================
+
 
 ## Reference info
 http://socket.io/
 
-## Getting started (Manual install)
 
 ## License
 
