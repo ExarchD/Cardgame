@@ -56,19 +56,16 @@ Deck.prototype.shuffleDeck() = function()
 		cardArray[shuffleThisCard] = cardArray[cardToSwitchWith - 1];
 		cardArray[cardToSwitchWith - 1] = cardArray[shuffleThisCard];		
 	}
-	
-	math.random()
-	//Shuffles cards currently in deck
 };
 
 Deck.prototype.takeTopCard() = function()
 {
-	//Take top card from deck, pop function in array
+	return cardArray.pop();
 };
 
 Deck.prototype.addCard( cardToAdd ) = function ()
 {
-	//Add one card
+	cardArray.push( cardToAdd );
 };
 
 ////// End Deck class //////
