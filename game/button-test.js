@@ -26,18 +26,28 @@ var Card = function Card(suit, rank)
 
 var Deck = function Deck()
 {
-	//default constructor, calls fillDeck.
+	var cardArray = new Card[];
+	this.fillDeck();
 };
 
 Deck.prototype.fillDeck() = function()
 {
-	// Will fill the deck with 52 cards
+	// Array for suit characters
+	var suitArray = [c, s, d, h];
+
+	
+	for( int fillSuits = 0; fillSuits < 3; fillSuits++  )
+	{
+		for( int fillRanks = 2; fillRanks < 15; fillSuits++)
+		{
+			this.cardArray.add( Card( suitArray[fillSuits], fillRanks);
+		}
+	}
 };
 
 Deck.prototype.shuffleDeck() = function()
 {
 	//Shuffles cards currently in deck
-
 };
 
 Deck.prototype.takeTopCard() = function()
@@ -45,7 +55,7 @@ Deck.prototype.takeTopCard() = function()
 	//Take top card from deck, pop function in array
 };
 
-Deck.prototype.addOneCard() = function ()
+Deck.prototype.addCard( cardToAdd ) = function ()
 {
 	//Add one card
 };
