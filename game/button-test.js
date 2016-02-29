@@ -36,17 +36,28 @@ Deck.prototype.fillDeck() = function()
 	var suitArray = [c, s, d, h];
 
 	
-	for( int fillSuits = 0; fillSuits < 3; fillSuits++  )
+	for( int fillSuits = 0; fillSuits < 3; fillSuits++)
 	{
 		for( int fillRanks = 2; fillRanks < 15; fillSuits++)
 		{
-			this.cardArray.add( new Card( suitArray[fillSuits], fillRanks));
+			this.cardArray.add(new Card(suitArray[fillSuits], fillRanks));
 		}
 	}
 };
 
 Deck.prototype.shuffleDeck() = function()
 {
+	new Card = tempCard(0,0);
+	
+	for (int shuffleThisCard = 0; shuffleThisCard < cardArray.length; shuffleThisCard++)
+	{
+		var cardToSwitchWith = Math.floor((Math.random() * cardArray.length) + 1);
+		tempCard = cardArray[shuffleThisCard];
+		cardArray[shuffleThisCard] = cardArray[cardToSwitchWith - 1];
+		cardArray[cardToSwitchWith - 1] = cardArray[shuffleThisCard];		
+	}
+	
+	math.random()
 	//Shuffles cards currently in deck
 };
 
