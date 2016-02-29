@@ -2,11 +2,11 @@ var game = new Phaser.Game(800, 600, Phaser.AUTO, 'button-test', { preload: prel
 
 ////// Start Card class //////
 
-	// Member variables for Card class:
-		// suit 
-		// rank
-	// possible suits are c=clubs, s=spades, d=diamonds, h=hearts
-	// possible ranks are 2 through 14, where 11 = Jack, 12=Queen, 13=King, 14=Ace
+// Member variables for Card class:
+// suit 
+// rank
+// possible suits are c=clubs, s=spades, d=diamonds, h=hearts
+// possible ranks are 2 through 14, where 11 = Jack, 12=Queen, 13=King, 14=Ace
 
 var Card = function Card(suit, rank)
 {
@@ -17,23 +17,23 @@ var Card = function Card(suit, rank)
 ////// End Card class //////
 
 ////// Start Deck class //////
-	// A deck is an array of cards.
-	// The default constructor makes a deck with 52 cards
-	// There is also a constructor to make an empty deck
-	// Member variables for deck are:
-		// cardArray[] (array of Card)
-	// Member functions for deck are:
-		// fillDeck()--Erases previous deck state and fills with 52 cards in order
-		// fillDeck( totalSuit, totalRank)--Allows you to fill deck with custom numbers of suit and rank
-		// shuffleDeck()--Shuffles whatever cards are currently in the deck
-		// takeTopCard()--Returns the top card in the deck and removes it from the deck
-		// addOneCard()--Adds one card top of deck
-		// takeIndexCard( cardIndex )--Removes a card at the index given
+// A deck is an array of cards.
+// The default constructor makes a deck with 52 cards
+// There is also a constructor to make an empty deck
+// Member variables for deck are:
+// cardArray[] (array of Card)
+// Member functions for deck are:
+// fillDeck()--Erases previous deck state and fills with 52 cards in order
+// fillDeck( totalSuit, totalRank)--Allows you to fill deck with custom numbers of suit and rank
+// shuffleDeck()--Shuffles whatever cards are currently in the deck
+// takeTopCard()--Returns the top card in the deck and removes it from the deck
+// addOneCard()--Adds one card top of deck
+// takeIndexCard( cardIndex )--Removes a card at the index given
 
 //Default constuctor: Makes an empty deck of cards
 var Deck = function Deck()
 {
-	var cardArray = Card[];
+	var cardArray = new Array();
 };
 
 // fillDeck()
@@ -45,9 +45,9 @@ Deck.prototype.fillDeck() = function()
 
 	//First For loop: cycles through the suits	
 	//Second For loop: cycles through the ranks
-	for( int fillSuits = 0; fillSuits < 3; fillSuits++)
+	for (fillSuits=0; fillSuits < 3; fillSuits++)
 	{
-		for( int fillRanks = 2; fillRanks < 15; fillSuits++)
+		for (fillRanks=2; fillRanks < 15; fillRanks++)
 		{
 			this.cardArray.add(new Card(suitArray[fillSuits], fillRanks));
 		}
@@ -62,23 +62,23 @@ Deck.prototype.fillDeck(totalSuit, totalRank) = function()
 {
 	// Array for suit characters
 	var suitArray = [c, s, d, h];
-	
+
 	var suitTemp; //Used to make suits with more than 1 character, ie if more than 4 suits
-	
+
 	//First For loop: cycles through the suits	
 	//Second For loop: populates the "tempSuit" with the correct number and type of characters
 	// The max number for charCount is basically an integer division, but I didn't know if .js had it
 	//Third For loop: cycles through the ranks
-	for( int fillSuits = 0; fillSuits < totalSuit; fillSuits++)
+	for (fillSuits=0; fillSuits < totalSuit; fillSuits++)
 	{
 		suitTemp=""; //Setting string to null each loop so can add correct chars for suit
-		for( int charCount = 0; charCount < (totalSuit- 1 - (totalSuit-1)%4)/4 + 1; charCount++)
+		for (charCount=0; charCount < (totalSuit- 1 - (totalSuit-1)%4)/4 + 1; charCount++)
 		{
 			suitTemp = suitTemp + suitArray[(fillSuits -1)%4];				
 		}
-		
+
 		//For loops to populate ranks
-		for( int fillRanks = 2; fillRanks < totalRank + 2; fillRanks++)
+		for (fillRanks=2; fillRanks < totalRank + 2; fillRanks++)
 		{
 			this.cardArray.add(new Card( suitTemp, fillRanks));
 		}
@@ -92,11 +92,11 @@ Deck.prototype.fillDeck(totalSuit, totalRank) = function()
 Deck.prototype.shuffleDeck() = function()
 {
 	// Makes a temp card so you can swap
-	new Card = tempCard(0,0);
+	tempCard = new Card (0,0);
 	// The randomly selected card in the deck that the current card will switch with
 	var cardToSwitchWith;
-	
-	for (int shuffleThisCard = 0; shuffleThisCard < cardArray.length; shuffleThisCard++)
+
+	for (shuffleThisCard = 0; shuffleThisCard < cardArray.length; shuffleThisCard++)
 	{
 		//Giving random number between 1 and number of cards in deck
 		cardToSwitchWith = Math.floor((Math.random() * cardArray.length) + 1);
@@ -137,14 +137,14 @@ Deck.prototype.takeIndexCard( deckCardIndex ) = function ()
 // A player is an object that can receive cards and play cards from their hand (Deck). The board is 
 // printed based on what the player can see
 // Member variables for Player Class
-	// myHand = new Deck()--The cards in the player's hand
-	// myCardsWon = new Deck()--The cards from the tricks the player has won
+// myHand = new Deck()--The cards in the player's hand
+// myCardsWon = new Deck()--The cards from the tricks the player has won
 // Member functions for Player Class
-	// receiveCard( cardToAdd ) 
-	// playCard()
-	// sortHand()
-	// printScreen()
-	
+// receiveCard( cardToAdd ) 
+// playCard()
+// sortHand()
+// printScreen()
+
 //Default constuctor: Makes a player with an empty deck of cards
 var Player = function Player()
 {
@@ -177,7 +177,7 @@ Player.prototype.printScreen() = function ()
 {
 	// Code that prints screen, will likely need access to some data (score, round, trump) from game
 	// SHOULD THIS BE IN PLAYER OR IN GAME?
-	
+
 };
 
 ////// End Player class //////
@@ -214,28 +214,28 @@ var background; // back ground slide
 
 function create() {
 
-    game.stage.backgroundColor = '#182d3b'; // Hex code color 
+	game.stage.backgroundColor = '#182d3b'; // Hex code color 
 
-	
-    background = game.add.tileSprite(0, 0, 800, 600, 'background');
+
+	background = game.add.tileSprite(0, 0, 800, 600, 'background');
 
 	// Variables X and Y locations for Your Cards
-	
+
 	var xPixFromCenter;
 	var yPix = 400;
 	var xPix_FirstCard = -120;
 	var xPix_spacing = 120;
-	
-    for (i=0; i < card_number; i++)
-    {
-	    var xPixFromCenter = xPix_FirstCard + xPix_spacing*i; //spacing is 40 pixels
-		
+
+	for (i=0; i < card_number; i++)
+	{
+		var xPixFromCenter = xPix_FirstCard + xPix_spacing*i; //spacing is 40 pixels
+
 		//Button constructor, upFrame is left blank, not used
 		button[i] = game.add.button(game.world.centerX + xPixFromCenter, yPix, 'button', actionOnClick, this, 2, 1, 0);
 		button[i].onInputOver.add(over, this);
 		button[i].onInputOut.add(out, this);
 		button[i].onInputUp.add(up, this);
-    }
+	}
 }
 
 
