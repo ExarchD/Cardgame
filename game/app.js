@@ -92,6 +92,7 @@ server.listen(gameport)
 			try {
 			var name = result.toString();
 			console.log("result exist");
+			console.log(name);
 			app.get( '/', function( req, res ){
 			console.log('trying to load %s', __dirname + '/index.html');
 			res.sendfile( '/index.html' , { root:__dirname });
