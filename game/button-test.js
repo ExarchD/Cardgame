@@ -40,12 +40,26 @@ function create() {
 }
 
 
-// card 
+// card class
+// Has variables suit and rank
+// possible suits are c=clubs, s=spades, d=diamonds, h=hearts
+// possible ranks are 2 through 14, where 11 = Jack, 12=Queen, 13=King, 14=Ace
+
 var Card = function Card(suit, rank)
 {
 	this.suit = suit;
 	this.rank = rank;
 };
+
+
+// A deck is a group of cards.
+// The default constructor makes a deck with 52 cards
+// There is also a constructor to make an empty deck
+// Member functions for deck are:
+// fillDeck()--Erases previous deck state and fills with 52 cards in order
+// shuffleDeck()--Shuffles whatever cards are currently in the deck
+// takeTopCard()--Returns the top card in the deck and removes it from the deck
+// addOneCard()--Adds one card top of deck
 
 var Deck = function Deck()
 {
