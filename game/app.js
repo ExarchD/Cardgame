@@ -67,6 +67,7 @@ server.listen(gameport)
 
 	//This handler will listen for requests on /*, any file from the root of our server.
 	//See expressjs documentation for more info on routing.
+	var clientid;
 
 	app.get( '/*' , function( req, res, next ) {
 
@@ -90,9 +91,9 @@ server.listen(gameport)
 			console.log("error : "+error);
 			}
 			try {
-			var name = result.toString();
+			clientid = JSON.parse(result).user_session[0];
 			console.log("result exist");
-			console.log(name);
+			console.log(clientid);
 			app.get( '/', function( req, res ){
 			console.log('trying to load %s', __dirname + '/index.html');
 			res.sendfile( '/index.html' , { root:__dirname });
