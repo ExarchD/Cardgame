@@ -40,6 +40,39 @@ function create() {
 }
 
 
+// card 
+var card = function card(suit, rank)
+{
+	this.suit = suit;
+	this.rank = rank;
+};
+
+var deck = function deck()
+{
+	//default constructor, calls fillDeck.
+};
+
+deck.prototype.fillDeck() = function()
+{
+	// Will fill the deck with 52 cards
+};
+
+deck.prototype.shuffleDeck() = function()
+{
+	//Shuffles cards currently in deck
+
+};
+
+deck.prototype.takeTopCard() = function()
+{
+	
+};
+
+deck.prototype.addOneCard() = function ()
+{
+	
+};
+
 
 
 function up() {
