@@ -1,45 +1,23 @@
-<!DOCTYPE html>
-<html>
+<html ng-app="sampleApp">
 	<head>
-		<script src="/socket.io/socket.io.js"></script>
-		<script src="http://ajax.googleapis.com/ajax/libs/angularjs/1.4.8/angular.js"></script>
-		<script src="//ajax.googleapis.com/ajax/libs/angularjs/1.2.25/angular-route.js"></script>
-
-
-		<script type="text/javascript" src="lobby-client.js"> </script>
-		<script>
-var socket = io.connect()
-
-	var app = angular.module('myApp', ['ngRoute']);
-	// var fenixApp = angular.module('MyApp', ['ngRoute']);
-	// fenixApp.controller('mainController', function($scope, socket) {
-	socket.on("onconnected", function(data){
-		console.log(data[0]);
-		// $scope.names = data;
-	});
-		</script>
-
 	</head>
 
-	<body onload="connection()">
-		<div id="metric_results">
-			<input type="button" id="create" value="Click here" onclick="Javascript:addTable_Games()">
-		</div>
-		<div ng-app="myApp" ng-controller="ngRoute"> 
+	<body ng-controller="IndexController">
+		<label>Please enter your name: </label>
+		<input ng-model="currentCustomer.name"/>
+		<button ng-click="join()">Join</button>
+		<br/>
 
-			<ul ng-repeat="x in names">
-				<li>{{ x }}</li>
-			</ul>
+		<input type="button" id="create" value="Click here" onclick="Javascript:emit()">
+		<h1>New Customers: </h1>
+		<ul>
+			<li ng-repeat="customer in newCustomers">{{customer}}</li>
+		</ul>
 
-		</div>
-
-		<!-- <div id="player_list_button"> -->
-		<!-- 	<input type="button" id="create_player_list" value="Click here" onclick="Javascript:addTable_Players()"> -->
-		<!-- </div> -->
-		<!-- <ul id="player_list"> -->
-		<!-- </ul> -->
-
-		<a href="game_lobby.html">Test absolute</a>
+		<script src="/socket.io/socket.io.js"></script>
+		<script src="http://ajax.googleapis.com/ajax/libs/angularjs/1.4.8/angular.js"></script>
+		<script src="http://ajax.googleapis.com/ajax/libs/angularjs/1.4.8/angular-route.js"></script>
+		<script src="lobby-client.js"></script>
 	</body>
 
 </html>
