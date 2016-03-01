@@ -22,7 +22,7 @@ gameport        = process.env.PORT || 4004,
 		fs = require("fs"),
 		redis = require("redis"),
 		co = require("./cookie.js");
-		var allclients = new Array(); //Array of clients
+var allclients = new Array(); //Array of clients
 
 /* Express server set up. */
 
@@ -33,139 +33,109 @@ gameport        = process.env.PORT || 4004,
 
 //Tell the server to listen for incoming connections
 server.listen(gameport)
+	var toType = function(obj) {
+		return ({}).toString.call(obj).match(/\s([a-zA-Z]+)/)[1].toLowerCase()
+	}
 
-	//Log something so we know that it succeeded.
-	console.log('\t :: Express :: Listening on port ' + gameport );
+//Log something so we know that it succeeded.
+console.log('\t :: Express :: Listening on port ' + gameport );
 
-    //app.get( '/', function( req, res ){
-    //    console.log('trying to load %s', __dirname + '/index.html');
-    //    res.sendfile( '/index.html' , { root:__dirname });
-    //});
+var clientid;
+var clientname;
 
+app.get( '/*' , function( req, res, next ) {
 
-    //    //This handler will listen for requests on /*, any file from the root of our server.
-    //    //See expressjs documentation for more info on routing.
+		//This is the current file they have requested
+		var file = req.params[0];
 
-    //app.get( '/*' , function( req, res, next ) {
+		//For debugging, we can track what files are requested.
+		if(verbose) console.log('\t :: Express :: file requested : ' + file);
 
-    //        //This is the current file they have requested
-    //    var file = req.params[0];
+		//Send the requesting client the file.
+		// res.sendfile( __dirname + '/' + file );
 
-    //        //For debugging, we can track what files are requested.
-    //    if(verbose) console.log('\t :: Express :: file requested : ' + file);
+		var cookieManager = new co.cookie(req.headers.cookie);
 
-    //        //Send the requesting client the file.
-    //    res.sendfile( __dirname + '/' + file );
+		//Note : to specify host and port : new redis.createClient(HOST, PORT, options)
+		//For default version, you don't need to specify host and port, it will use default one
+		var clientSession = new redis.createClient();
 
-    //}); //app.get *
+		clientSession.get("sessions/"+cookieManager.get("PHPSESSID"), function(error, result){
+		if(error){
+		console.log("error : "+error);
+		}
+		try {
 
-	//By default, we forward the / path to index.html automatically.
-	// app.get( '/', function( req, res ){
-	// 	console.log('trying to load %s', __dirname + '/index.html');
-	// 	res.sendfile( '/index.html' , { root:__dirname });
-	// });
+		console.log("result exist");
+		var o = JSON.parse(result);
+		var arr = Object.keys(o).map(function(k) { return o[k] });
+		clientid = arr[0];
+		clientname = arr[1];
+		console.log(arr[1]);
 
-
-	//This handler will listen for requests on /*, any file from the root of our server.
-	//See expressjs documentation for more info on routing.
-	var clientid;
-
-	app.get( '/*' , function( req, res, next ) {
-
-			//This is the current file they have requested
-			var file = req.params[0];
-
-			//For debugging, we can track what files are requested.
-			if(verbose) console.log('\t :: Express :: file requested : ' + file);
-
-			//Send the requesting client the file.
-			// res.sendfile( __dirname + '/' + file );
-
-			var cookieManager = new co.cookie(req.headers.cookie);
-
-			//Note : to specify host and port : new redis.createClient(HOST, PORT, options)
-			//For default version, you don't need to specify host and port, it will use default one
-			var clientSession = new redis.createClient();
-
-			clientSession.get("sessions/"+cookieManager.get("PHPSESSID"), function(error, result){
-			if(error){
-			console.log("error : "+error);
-			}
-			try {
-			clientid = JSON.parse(result).user_session[0];
-			console.log("result exist");
-			console.log(clientid);
-			app.get( '/game_lobby', function( req, res ){
-			console.log('trying to load %s', __dirname + '/game_lobby.html');
-			res.sendfile( '/game_lobby.html' , { root:__dirname });
-			});
-			app.get( '/', function( req, res ){
-			console.log('trying to load %s', __dirname + '/index.html');
-			res.sendfile( '/index.html' , { root:__dirname });
-			});
-        		res.sendfile( __dirname + '/' + file );
-			}
-			catch(err) {
-			console.log("session does not exist");
-			res.statusCode = 302; 
-			res.setHeader("Location", "127.0.0.1:80/cardgame/login.php");
-			res.end();
-			}
-			});
-
-			}); //app.get *
-
-
-	/* Socket.IO server set up. */
-
-	//Express and socket.io can work together to serve the socket.io client files for you.
-	//This way, when the client requests '/socket.io/' files, socket.io determines what the client needs.
-
-	//Create a socket.io instance using our express server
-	var sio = io.listen(server);
-
-	//Configure the socket.io connection settings.
-	//See http://socket.io/
-	sio.configure(function (){
-
-		sio.set('log level', 0);
-
-		sio.set('authorization', function (handshakeData, callback) {
-			callback(null, true); // error first callback style
+		app.get( '/game_lobby', function( req, res ){
+		console.log('trying to load %s', __dirname + '/game_lobby.html');
+		res.sendfile( '/game_lobby.html' , { root:__dirname });
+		});
+		app.get( '/', function( req, res ){
+		console.log('trying to load %s', __dirname + '/index.html');
+		res.sendfile( '/index.html' , { root:__dirname });
+		});
+		res.sendfile( __dirname + '/' + file );
+		}
+		catch(err) {
+		console.log("session does not exist");
+		res.statusCode = 302; 
+		res.setHeader("Location", "127.0.0.1:80/cardgame/login.php");
+		res.end();
+		}
 		});
 
+		}); //app.get *
+
+
+/* Socket.IO server set up. */
+
+//Express and socket.io can work together to serve the socket.io client files for you.
+//This way, when the client requests '/socket.io/' files, socket.io determines what the client needs.
+
+//Create a socket.io instance using our express server
+var sio = io.listen(server);
+
+//Configure the socket.io connection settings.
+//See http://socket.io/
+sio.configure(function (){
+
+	sio.set('log level', 0);
+
+	sio.set('authorization', function (handshakeData, callback) {
+		callback(null, true); // error first callback style
 	});
 
-//Enter the game server code. The game server handles
-//client connections looking for a game, creating games,
-//leaving games, joining games and ending games when they leave.
-// game_server = require('./game.server.js');
-//Socket.io will call this function when a client connects,
-//So we can send that client looking for a game to play,
-//as well as give that client a unique ID to use so we can
-//maintain the list if players.
-var username = "Hello";
+});
+
 sio.sockets.on('connection', function (client) {
 
-	//Generate a new UUID, looks something like
-	//5b2ca132-64bd-4513-99da-90e838ca47d1
-	//and store this on their socket/connection
 	client.userid = clientid;
-	client.username = username;
+	client.username = clientname;
 
 	//tell the player they connected, giving them their id
 	allclients.push(client.username);
 	allclients.sort();
-		client.emit('onconnected', {
+	console.log(allclients);
+
+	// add username to list of connected clients
+	// and push to all connected sockets. This keeps the current number of users updated
+	var users =  new Array();
+	users.push(sio.sockets); // without .sessionId
+	for (var u in users)    {
+		console.log(users[u].id);
+		users[u].emit('update_player_list', {
 			message: 'new customer',
 			customer: allclients
 		});
-	// client.on('onconnected', function(data){
-	//        console.log(data[0]);
-	// });
+	}
 
-	// add username to list of connected clients
-	
 	console.log('\t socket.io:: player ' + client.username + ' connected');
 
 	//now we can find them a game to play with someone.

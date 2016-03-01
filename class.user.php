@@ -43,6 +43,7 @@ class USER
              if(password_verify($upass, $userRow['user_pass']))
              {
                 $_SESSION['user_session'] = $userRow['user_id'];
+                $_SESSION['user_name'] = $userRow['user_name'];
                 return true;
              }
              else
