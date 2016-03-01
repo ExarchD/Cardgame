@@ -146,25 +146,26 @@ sio.sockets.on('connection', function (client) {
 	console.log('\t socket.io:: player ' + client.userid + ' connected');
 
 
-	//Now we want to handle some of the messages that clients will send.
-	//They send messages here, and we send them to the game_server to handle.
-	// client.on('message', function(m) {
-
-	// 	game_server.onMessage(client, m);
-
-	// }); //client.on message
-
 	//When this client disconnects, we want to tell the game server
 	//about that as well, so it can remove them from the game they are
 	//in, and make sure the other player knows that they left and so on.
 	client.on('disconnect', function () {
 
+		delete users[users.indexOf(sio.sockets)];
 		//Useful to know when soomeone disconnects
-		console.log('\t socket.io:: client disconnected ' + client.userid + ' ' + client.game_id);
+		console.log('\t socket.io:: client disconnected ' + client.userid + ' ' + client.username);
 		// Remove username from the list of connected clients
 		var index = allclients.indexOf(client.username);
 		if (index > -1) {
-			    allclients.splice(index, 1);
+			allclients.splice(index, 1);
+		}
+		console.log(allclients);
+
+		for (var u in users)    {
+			users[u].emit('update_player_list', {
+				message: 'new customer',
+				customer: allclients
+			});
 		}
 
 		//If the client was in a game, set by game_server.findGame,
@@ -172,10 +173,8 @@ sio.sockets.on('connection', function (client) {
 		//if(client.game && client.game.id) {
 
 		//	//player leaving a game should destroy that game
-		//	game_server.endGame(client.game.id, client.userid);
 
-		//} //client.game_id
 
 	}); //client.on disconnect
 
-}); //sio.sockets.on connection
+	}); //sio.sockets.on connection

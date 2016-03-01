@@ -19,7 +19,8 @@ app.factory('socket', ['$rootScope', function($rootScope) {
 	};
 }]);
 
-app.controller('IndexController', function($scope, socket) {
+
+app.controller('IndexController', function($route, $scope, socket) {
 	$scope.newCustomers = [];
 	$scope.currentCustomer = {};
 
@@ -27,7 +28,16 @@ app.controller('IndexController', function($scope, socket) {
 		socket.emit('add-customer', $scope.currentCustomer);
 	};
 
-	socket.on('onconnected', function(data) {
+	socket.on('update_player_list', function(data) {
+		console.log("connected a new client");
+		$scope.$apply(function () {
+		$scope.newCustomers = [];
+	for (i=0; i < data.customer.length; i++)
+			$scope.newCustomers.push(data.customer[i]);
+		});
+	});
+
+	socket.on('ondisconnected', function(data) {
 		$scope.$apply(function () {
 	for (i=0; i < data.customer.length; i++)
 			$scope.newCustomers.push(data.customer[i]);
