@@ -93,18 +93,17 @@ server.listen(gameport)
 			}
 			try {
 			clientid = JSON.parse(result).user_session[0];
-			// console.log("result exist");
+			console.log("result exist");
 			console.log(clientid);
-			app.get( '/lobby', function( req, res ){
-			console.log('trying to load %s', __dirname + '/lobby.html');
-			res.sendfile( '/' , { root:__dirname });
+			app.get( '/game_lobby', function( req, res ){
+			console.log('trying to load %s', __dirname + '/game_lobby.html');
+			res.sendfile( '/game_lobby.html' , { root:__dirname });
 			});
 			app.get( '/', function( req, res ){
 			console.log('trying to load %s', __dirname + '/index.html');
 			res.sendfile( '/index.html' , { root:__dirname });
 			});
-			res.sendfile( '/' , { root:__dirname });
-        		// res.sendfile( __dirname + '/' + file );
+        		res.sendfile( __dirname + '/' + file );
 			}
 			catch(err) {
 			console.log("session does not exist");
