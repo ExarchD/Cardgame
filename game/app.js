@@ -140,8 +140,6 @@ server.listen(gameport)
 //client connections looking for a game, creating games,
 //leaving games, joining games and ending games when they leave.
 // game_server = require('./game.server.js');
-lobby = require('./lobby-client.js');
-
 //Socket.io will call this function when a client connects,
 //So we can send that client looking for a game to play,
 //as well as give that client a unique ID to use so we can
@@ -158,7 +156,13 @@ sio.sockets.on('connection', function (client) {
 	//tell the player they connected, giving them their id
 	allclients.push(client.username);
 	allclients.sort();
-	client.emit('onconnected', { allclients } );
+		client.emit('onconnected', {
+			message: 'new customer',
+			customer: allclients
+		});
+	// client.on('onconnected', function(data){
+	//        console.log(data[0]);
+	// });
 
 	// add username to list of connected clients
 	
