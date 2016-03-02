@@ -8,11 +8,11 @@ var game = new Phaser.Game(800, 600, Phaser.AUTO, 'button-test', { preload: prel
 // possible suits are c=clubs, s=spades, d=diamonds, h=hearts
 // possible ranks are 2 through 14, where 11 = Jack, 12=Queen, 13=King, 14=Ace
 
-var Card = function Card(s, r)
+function Card(s, r)
 {
 	this.suit = s;
 	this.rank = r;
-};
+}
 
 ////// End Card class //////
 
@@ -31,14 +31,14 @@ var Card = function Card(s, r)
 //      takeIndexCard( cardIndex )--Removes a card at the index given
 
 //Default constuctor: Makes an empty deck of cards
-var Deck = function Deck()
+function Deck()
 {
 	this.cardArray = [];
-};
+}
 
 // fillDeck()
 // Default is 4 suits and 2 through 14 (aka 2 through Ace)
-Deck.prototype.fillDeck() = function()
+Deck.prototype.fillDeck = function fillDeck()
 {
 	// Array for suit characters
 	// Default 0 = c    1 = s    2 = h    3 = d
@@ -61,7 +61,7 @@ Deck.prototype.fillDeck() = function()
 // Default is 4 suits and 2 through 14 (aka 2 through Ace)
 // If more than 4 suits: 5 = cc, 6 = ss, 7 = dd, 8 = hh, 9 = ccc, 10 = sss, etc.
 //
-Deck.prototype.fillDeck(totalSuit, totalRank) = function()
+Deck.prototype.fillDeck = function fillDeck(totalSuit, totalRank)
 {
 	// Array for suit characters
 	var suitArray = [c, s, h, d];
@@ -92,7 +92,7 @@ Deck.prototype.fillDeck(totalSuit, totalRank) = function()
 // The shuffleDeck() function will shuffle the deck with however many cards it currently has in it
 // The shuffle goes through each position in the deck and exchanges it with a the random at a
 //      random position in the deck.
-Deck.prototype.shuffleDeck() = function()
+Deck.prototype.shuffleDeck = function shuffleDeck()
 {
 	// Makes a temp card so you can swap
 	var tempCard = new Card (0,0);
@@ -112,7 +112,7 @@ Deck.prototype.shuffleDeck() = function()
 
 // takeTopCard() 
 // This removes the top card (last in array) from the deck
-Deck.prototype.takeTopCard() = function()
+Deck.prototype.takeTopCard = function takeTopCard()
 {
 	return this.cardArray.pop();
 };
@@ -120,14 +120,14 @@ Deck.prototype.takeTopCard() = function()
 // addCards( cardToAdd) 
 // This adds a card(s) to the top of the deck (adds to last in array)
 // NOTE: Will work if either single card or array of cards is added
-Deck.prototype.addCards( cardsToAdd ) = function ()
+Deck.prototype.addCards = function addCards( cardsToAdd )
 {
 	this.cardArray.concat( cardsToAdd );
 };
 
 // takeIndexCard( cardIndex ) 
 // This removes a card at a particular index and returns it
-Deck.prototype.takeIndexCard( deckCardIndex ) = function ()
+Deck.prototype.takeIndexCard = function takeIndexCard( deckCardIndex )
 {
 	return this.cardArray.splice(cardIndex, 1);
 };
@@ -152,23 +152,23 @@ Deck.prototype.takeIndexCard( deckCardIndex ) = function ()
 //      sortHand()
 
 //Default constuctor: Makes a player with an empty deck of cards
-var Player = function Player()
+function Player()
 {
 	this.myHand = new Deck();
 	this.myCardsWon = new Deck();
 	this.myPiles = [];
-};
+}
 
 // receiveCardHand( cardToAdd )
 // Function used to give a player a card or set of cards (this function will accept arrays)
-Player.prototype.receiveCardHand( cardToAdd ) = function ()
+Player.prototype.receiveCardHand = function receiveCardHand( cardToAdd )
 {
 	this.myHand.addCards( cardToAdd );
 };
 
 // receiveCardWin( cardToAdd )
 // Function used to give a player a card or set of cards (this function will accept arrays)
-Player.prototype.receiveCardWin( cardToAdd ) = function ()
+Player.prototype.receiveCardWin = function receiveCardWin( cardToAdd )
 {
 	this.myCardsWon.addCards( cardToAdd );
 };
@@ -176,14 +176,14 @@ Player.prototype.receiveCardWin( cardToAdd ) = function ()
 // playCard( handCardIndex )
 // Function used to play a card, will be called by clicking on card button
 // By clicking on the card button the index of the card clicked will be passed to this function
-Player.prototype.playCardHand( handCardIndex ) = function ()
+Player.prototype.playCardHand = function playCardHand( handCardIndex )
 {
 	return this.myHand.takeIndexCard( handCardIndex );
 };
 
 // emptyAllDecks()
 // Function used to get rid of all cards a player has
-Player.prototype.emptyAllDecks() = function ()
+Player.prototype.emptyAllDecks = function emptyAllDecks()
 {
 	this.myHand.splice(0,myHand.length);
 	this.myCardsWon.splice(0,myCardsWon.length);
@@ -193,7 +193,7 @@ Player.prototype.emptyAllDecks() = function ()
 
 // sortHand()
 // Function used to sort a hand, can be called by button on player screen
-Player.prototype.sortHand() = function ()
+Player.prototype.sortHand = function sortHand()
 {
 	// Code that sorts hand, give deck a function that sorts???
 };
@@ -222,22 +222,20 @@ Player.prototype.sortHand() = function ()
 
 
 
-function preload() {
-
+function preload() 
+{
 	game.load.spritesheet('button', 'assets/button_sprite_sheet.png', 193, 71);
 	game.load.image('background','assets/starfield.jpg');
-	game.load.spritesheet('cards', 'assets/52playingCardsSpriteSheet96x72.png', 96, 72)
-
+	game.load.spritesheet('cards', 'assets/52playingCardsSpriteSheet72x96.png', 72, 96)
 }
 
-var card_number = 3; // Number of cards on screen, will be buttons
+var card_number = 6; // Number of cards on screen, will be buttons
 var button = new Array(); //Array of butons for screen
 var background; // back ground slide
 
-function create() {
-
+function create() 
+{
 	game.stage.backgroundColor = '#182d3b'; // Hex code color 
-
 
 	background = game.add.tileSprite(0, 0, 800, 600, 'background');
 
@@ -245,7 +243,7 @@ function create() {
 
 	var xPixFromCenter;
 	var yPix = 400;
-	var xPix_FirstCard = -100;
+	var xPix_FirstCard = -325;
 	var xPix_spacing = 100;
 
 	for (i=0; i < card_number; i++)
@@ -253,7 +251,7 @@ function create() {
 		var xPixFromCenter = xPix_FirstCard + xPix_spacing*i; //spacing is 40 pixels
 
 		//Button constructor, upFrame is left blank, not used
-		button[i] = game.add.button(game.world.centerX + xPixFromCenter, yPix, 'cards', actionOnClick, this, 0, 1, 2);
+		button[i] = game.add.button(game.world.centerX + xPixFromCenter, yPix, 'cards', actionOnClick, this, 1, 0, 2);
 		button[i].onInputOver.add(over, this);
 		button[i].onInputOut.add(out, this);
 		button[i].onInputUp.add(up, this);
@@ -261,19 +259,23 @@ function create() {
 }
 
 
-function up() {
+function up() 
+{
 	console.log('button up', arguments);
 }
 
-function over() {
+function over() 
+{
 	console.log('button over');
 }
 
-function out() {
+function out() 
+{
 	console.log('button out');
 }
 
-function actionOnClick () {
+function actionOnClick() 
+{
 
 	background.visible =! background.visible;
 
