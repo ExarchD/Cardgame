@@ -1,4 +1,5 @@
 var app = angular.module('sampleApp', ['ngRoute']);
+var socket = io.connect();
 
 app.config(['$routeProvider', function($routeProvider) {
 	$routeProvider.when('/', {
@@ -7,7 +8,6 @@ app.config(['$routeProvider', function($routeProvider) {
 }]);
 
 app.factory('socket', ['$rootScope', function($rootScope) {
-	var socket = io.connect();
 
 	return {
 		on: function(eventName, callback){
@@ -31,18 +31,23 @@ app.controller('IndexController', function($route, $scope, socket) {
 	socket.on('update_player_list', function(data) {
 		console.log("connected a new client");
 		$scope.$apply(function () {
-		$scope.newCustomers = [];
-	for (i=0; i < data.customer.length; i++)
-			$scope.newCustomers.push(data.customer[i]);
+			$scope.newCustomers = [];
+			for (i=0; i < data.customer.length; i++)
+				$scope.newCustomers.push(data.customer[i]);
 		});
 	});
 
 	socket.on('ondisconnected', function(data) {
 		$scope.$apply(function () {
-	for (i=0; i < data.customer.length; i++)
-			$scope.newCustomers.push(data.customer[i]);
+			for (i=0; i < data.customer.length; i++)
+				$scope.newCustomers.push(data.customer[i]);
 		});
 	});
 });
 
 
+function logout () {
+
+	socket.emit('disconnect');
+
+	};

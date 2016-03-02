@@ -150,6 +150,7 @@ sio.sockets.on('connection', function (client) {
 	//about that as well, so it can remove them from the game they are
 	//in, and make sure the other player knows that they left and so on.
 	client.on('disconnect', function () {
+		console.log('disconnecting');
 
 		delete users[users.indexOf(sio.sockets)];
 		//Useful to know when soomeone disconnects

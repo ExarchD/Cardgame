@@ -3,7 +3,7 @@ require_once 'dbconfig.php';
 
 if($user->is_loggedin()!="")
 {
-	$user->redirect('home.php');
+	$user->redirect('index.html');
 }
 
 if(isset($_POST['btn-login']))
@@ -14,7 +14,7 @@ if(isset($_POST['btn-login']))
 
 	if($user->login($uname,$umail,$upass))
 	{
-		$user->redirect('home.php');
+		$user->redirect('index.html');
 	}
 	else
 	{
