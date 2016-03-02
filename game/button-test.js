@@ -141,7 +141,10 @@ Deck.prototype.takeIndexCard = function takeIndexCard( deckCardIndex )
 // A player is an object that can receive cards and play cards from their hand (Deck). The board is 
 // printed based on what the player can see
 // Member variables for Player Class
-//      myHand = new Deck()--The cards in the player's hand
+//	    teamNum--Which team number this player is on
+//      ID--User name of the person
+//   	screenName--Screen name in case we want to have user name and visible name seperate
+//      myHand --The cards in the player's hand
 //      myCardsWon = new Deck()--The cards from the tricks the player has won
 //      myPiles = new Deck()-- In particular games a player might need more piles of cards, this is an array of decks
 // Member functions for Player Class
@@ -152,8 +155,20 @@ Deck.prototype.takeIndexCard = function takeIndexCard( deckCardIndex )
 //      sortHand()
 
 //Default constuctor: Makes a player with an empty deck of cards
-function Player()
+function Player(teamNumber, userID, alias)
 {
+	this.teamNum = teamNumber;
+	this.servUserID = userID;
+	
+	if ( alias === undefined)
+	{
+		this.screenName = userID;
+	}
+	else
+	{
+	this.nickname = alias;
+	}
+	
 	this.myHand = new Deck();
 	this.myCardsWon = new Deck();
 	this.myPiles = [];
@@ -203,6 +218,33 @@ Player.prototype.sortHand = function sortHand()
 ////// End Player class //////
 
 ////// Start Game class //////
+
+// The two variables passed in are going to come from the server setting up the lobby.
+function GameConfig( gameTypeID, playerArray)
+{
+	this.gameType = gameTypeID;
+	this.players = playerArray;
+	
+	// IF playerArray doesn't have the right number of players for the game, return to lobby.
+	// if (this.players.length !=  CHECKING APPROPRIATE CONFIG FILE VARIABLE )
+	// {
+	//  	Returnt to lobby
+	// }
+	
+	// Call function to set up the players. This function will load the CONFIG FILE FUNCTION and run it on each player.
+	// For each player in this.players, it will set up the correct number of piles, and double check
+	// the order based on teams is correct
+	
+	// Start of loop that actually runs game. This will call a function in the CONFIG file, 
+	// This function will need ot have a part that does setting up round, checking moves are legal, check game win, and after
+	// The game return the winners to the GameConfig.
+	
+	
+	
+	this.myHand = new Deck();
+	this.myCardsWon = new Deck();
+	this.myPiles = [];
+}
 
 
 
