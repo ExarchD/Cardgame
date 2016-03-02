@@ -41,8 +41,8 @@ var Deck = function Deck()
 Deck.prototype.fillDeck() = function()
 {
 	// Array for suit characters
-	// Default 0 = c     1 = s    2 = d    3 = h
-	var suitArray = [c, s, d, h];
+	// Default 0 = c    1 = s    2 = h    3 = d
+	var suitArray = [c, s, h, d];
 	var minRank = 2; //Minimum card is a 2
 	var maxRank = 14; //Max rank is Ace = 14
 
@@ -57,14 +57,14 @@ Deck.prototype.fillDeck() = function()
 	}
 };
 
-// fillDeck( totalRank, totalSuit)
+// fillDeck( totalSuit, totalRank)
 // Default is 4 suits and 2 through 14 (aka 2 through Ace)
 // If more than 4 suits: 5 = cc, 6 = ss, 7 = dd, 8 = hh, 9 = ccc, 10 = sss, etc.
 //
 Deck.prototype.fillDeck(totalSuit, totalRank) = function()
 {
 	// Array for suit characters
-	var suitArray = [c, s, d, h];
+	var suitArray = [c, s, h, d];
 
 	var suitTemp; //Used to make suits with more than 1 character, ie if more than 4 suits
 
@@ -226,6 +226,7 @@ function preload() {
 
 	game.load.spritesheet('button', 'assets/button_sprite_sheet.png', 193, 71);
 	game.load.image('background','assets/starfield.jpg');
+	game.load.spritesheet('cards', 'assets/52playingCardsSpriteSheet96x72.png', 96, 72)
 
 }
 
@@ -244,15 +245,15 @@ function create() {
 
 	var xPixFromCenter;
 	var yPix = 400;
-	var xPix_FirstCard = -120;
-	var xPix_spacing = 120;
+	var xPix_FirstCard = -100;
+	var xPix_spacing = 100;
 
 	for (i=0; i < card_number; i++)
 	{
 		var xPixFromCenter = xPix_FirstCard + xPix_spacing*i; //spacing is 40 pixels
 
 		//Button constructor, upFrame is left blank, not used
-		button[i] = game.add.button(game.world.centerX + xPixFromCenter, yPix, 'button', actionOnClick, this, 2, 1, 0);
+		button[i] = game.add.button(game.world.centerX + xPixFromCenter, yPix, 'cards', actionOnClick, this, 0, 1, 2);
 		button[i].onInputOver.add(over, this);
 		button[i].onInputOut.add(out, this);
 		button[i].onInputUp.add(up, this);
