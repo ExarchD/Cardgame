@@ -31,6 +31,7 @@ var bodyParser   = require('body-parser');
 app.use(morgan('dev')); // log every request to the console
 app.use(cookieParser()); // read cookies (needed for auth)
 app.use(bodyParser()); // get information from html forms
+app.use(express.static(__dirname + '/views'));
 
 app.set('view engine', 'ejs');
 
@@ -86,7 +87,7 @@ var sio = io.listen(server);
 //See http://socket.io/
 sio.configure(function (){
 
-	sio.set('log level', 0);
+	sio.set('log level', 3);
 
 	sio.set('authorization', function (handshakeData, callback) {
 		callback(null, true); // error first callback style
@@ -94,27 +95,39 @@ sio.configure(function (){
 
 });
 
+	var users =  new Array();
 sio.sockets.on('connection', function (client) {
 
-	client.userid = clientid;
-	client.username = clientname;
+	client.on('player_login', function (data) {
+
+	client.userid = UUID();
+	client.username = data;
 
 	//tell the player they connected, giving them their id
 	allclients.push(client.username);
 	allclients.sort();
-	console.log(allclients);
 
 	// add username to list of connected clients
 	// and push to all connected sockets. This keeps the current number of users updated
-	var users =  new Array();
-	users.push(sio.sockets); // without .sessionId
+	});
+
+
+	client.on('player_login', function (data) {
+		console.log(data);
+		console.log(data);
+		console.log(data);
+		console.log(data);
+		console.log(data);
+		console.log(data);
+		console.log(data);
+		console.log(data);
+	users.push(client); // without .sessionId
 	for (var u in users)    {
-		console.log(users[u].id);
 		users[u].emit('update_player_list', {
-			message: 'new customer',
-			customer: allclients
+			all_connected: allclients
 		});
 	}
+	});
 
 	console.log('\t socket.io:: player ' + client.username + ' connected');
 

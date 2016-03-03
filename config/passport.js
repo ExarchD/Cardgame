@@ -30,7 +30,7 @@ module.exports = function(passport) {
 
 	// used to serialize the user for the session
 	passport.serializeUser(function(user, done) {
-		console.log(user);
+		// console.log(user);
 		done(null, user.user_id);
 	});
 
@@ -78,7 +78,8 @@ module.exports = function(passport) {
 				var insertQuery = "INSERT INTO users_new ( user_name, user_email, user_pass ) values ('" + username +"','" + email +"','"+ newpass +"')";
 				connection.query(insertQuery,function(err,rows){
 					newUserMysql.user_id = rows.insertId;
-					io.connect('http://localhost:4004');
+					// var socket = io.connect('http://localhost:4004');
+					// socket.emit("player_login", req.body.username);
 					return done(null, newUserMysql);
 				});	
 			}	
@@ -107,15 +108,21 @@ module.exports = function(passport) {
 			} 
 
 			// if the user is found but the password is wrong
-			console.log(rows[0].user_pass);
-			console.log(hash(password));
+			// console.log(rows[0].user_pass);
+			// console.log(hash(password));
 			if (!( rows[0].user_pass == hash(password)))
 				return done(null, false, req.flash('loginMessage', 'Oops! Wrong password.')); // create the loginMessage and save it to session as flashdata
 
-			// all is well, return successful user
-			console.log(rows);
-			var socket = io.connect('http://localhost:4004');
-			socket.emit("player_login", req.body.username);
+			connection.query("SELECT user_name FROM `users_new` WHERE `user_email` = '" + email + "'",function(err,rows2){
+			if (err)
+				return done(err);
+			if (!rows2.length) {
+				return done(null, false, req.flash('loginMessage', 'No user found.')); // req.flash is the way to set flashdata using connect-flash
+			}
+				// console.log(rows2[0].user_name);
+				// var socket = io.connect('http://localhost:4004');
+				// socket.emit("player_login", rows2[0].user_name);
+			});	
 			return done(null, rows[0]);			
 
 		});
