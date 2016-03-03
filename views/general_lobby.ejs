@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<title>Node Authentication</title>
+		<meta charset="utf-8">
+		<script src="http://ajax.googleapis.com/ajax/libs/jquery/1.6.4/jquery.min.js"></script>
+		<link rel="stylesheet" href="//netdna.bootstrapcdn.com/bootstrap/3.0.2/css/bootstrap.min.css">
+		<link rel="stylesheet" href="//netdna.bootstrapcdn.com/font-awesome/4.0.3/css/font-awesome.min.css">
+		<script src="/socket.io/socket.io.js"></script>
+		<script type='text/javascript'>
+
+var socket = io.connect('http://localhost:4004');
+var ugly =<%-JSON.stringify(user)%>
+socket.emit("player_login", ugly.user_name);
+socket.on('update_player_list', function(msg){
+	var entries = $('#messages-area').size();
+	for ( i =0; i < msg.all_connected.length; i++){
+		$('#messages-area').append($('<li>').text(msg.all_connected[i]));
+	}
+	var entries = $('#messages-area').size();
+});
+		</script>
+		<style>
+body        { padding-top:80px; word-wrap:break-word; }
+		</style>
+	</head>
+	<body>
+		<div class="container">
+
+			<div class="page-header text-center">
+				<h1><span class="fa fa-anchor"></span> Profile Page</h1>
+				<!-- <a href="/general_lobby" class="btn btn-default btn-sm">Get to the Games!</a> -->
+				<a href="/logout" class="btn btn-default btn-sm">Logout</a>
+				<a href="/profile" class="btn btn-default btn-sm">Profile</a>
+			</div>
+
+			<div class="row">
+
+				<!-- LOCAL INFORMATION -->
+				<div class="col-sm-6">
+					<div>
+						Players:
+						<ul id="messages-area"></ul>
+					</div>
+				</div>
+
+			</div>
+
+		</div>
+	</body>
+</html>
