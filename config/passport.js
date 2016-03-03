@@ -4,6 +4,12 @@
 var LocalStrategy   = require('passport-local').Strategy;
 
 var mysql = require('mysql');
+var crypto 	 = require('crypto');
+var io = require('socket.io-client');
+
+function hash(name) {
+	return crypto.createHash('md5').update(name).digest('hex');
+}
 
 var connection = mysql.createConnection({
 	host     : 'localhost',
@@ -64,13 +70,15 @@ module.exports = function(passport) {
 				// create the user
 				var newUserMysql = new Object();
 
+				newpass = hash(password);
 				newUserMysql.user_email    = email;
-				newUserMysql.user_pass = password; // use the generateHash function in our user model
-				newUserMysql.user_name = username; // use the generateHash function in our user model
+				newUserMysql.user_pass = newpass; // use the generateHash function in our user model
+				newUserMysql.user_name = username;
 
-				var insertQuery = "INSERT INTO users_new ( user_name, user_email, user_pass ) values ('" + username +"','" + email +"','"+ password +"')";
+				var insertQuery = "INSERT INTO users_new ( user_name, user_email, user_pass ) values ('" + username +"','" + email +"','"+ newpass +"')";
 				connection.query(insertQuery,function(err,rows){
 					newUserMysql.user_id = rows.insertId;
+					io.connect('http://localhost:4004');
 					return done(null, newUserMysql);
 				});	
 			}	
@@ -99,11 +107,15 @@ module.exports = function(passport) {
 			} 
 
 			// if the user is found but the password is wrong
-			if (!( rows[0].user_pass == password))
+			console.log(rows[0].user_pass);
+			console.log(hash(password));
+			if (!( rows[0].user_pass == hash(password)))
 				return done(null, false, req.flash('loginMessage', 'Oops! Wrong password.')); // create the loginMessage and save it to session as flashdata
 
 			// all is well, return successful user
 			console.log(rows);
+			var socket = io.connect('http://localhost:4004');
+			socket.emit("player_login", req.body.username);
 			return done(null, rows[0]);			
 
 		});
