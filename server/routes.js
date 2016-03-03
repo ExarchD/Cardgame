@@ -21,7 +21,7 @@ module.exports = function(app, passport) {
 	// app.post('/login', do all our passport stuff here);
 
 	app.post('/login', passport.authenticate('local-login', {
-		successRedirect : '/general_lobby_angularq', // redirect to the secure profile section
+		successRedirect : '/general_lobby', // redirect to the secure profile section
 		failureRedirect : '/login', // redirect back to the signup page if there is an error
 		failureFlash : true // allow flash messages
 	}));
@@ -62,14 +62,9 @@ module.exports = function(app, passport) {
 			user : req.user // get the user out of session and pass to template
 		});
 	});
-	app.get('/general_lobby_angularq', isLoggedIn, function(req, res) {
+	app.get('/general_lobby', isLoggedIn, function(req, res) {
 		console.log(req.user);
-		res.render('general_lobby_angularq.ejs', {
-			user : req.user // get the user out of session and pass to template
-		});
-	});
-	app.get('/test', isLoggedIn, function(req, res) {
-		res.render('test.ejs', {
+		res.render('general_lobby.ejs', {
 			user : req.user // get the user out of session and pass to template
 		});
 	});
