@@ -24,7 +24,8 @@ module.exports = function(passport) {
 
 	// used to serialize the user for the session
 	passport.serializeUser(function(user, done) {
-		done(null, user.id);
+		console.log(user);
+		done(null, user.user_id);
 	});
 
 	// used to deserialize the user
@@ -63,12 +64,13 @@ module.exports = function(passport) {
 				// create the user
 				var newUserMysql = new Object();
 
-				newUserMysql.email    = email;
-				newUserMysql.password = password; // use the generateHash function in our user model
+				newUserMysql.user_email    = email;
+				newUserMysql.user_pass = password; // use the generateHash function in our user model
+				newUserMysql.user_name = username; // use the generateHash function in our user model
 
 				var insertQuery = "INSERT INTO users_new ( user_name, user_email, user_pass ) values ('" + username +"','" + email +"','"+ password +"')";
 				connection.query(insertQuery,function(err,rows){
-					newUserMysql.id = rows.insertId;
+					newUserMysql.user_id = rows.insertId;
 					return done(null, newUserMysql);
 				});	
 			}	
@@ -101,6 +103,7 @@ module.exports = function(passport) {
 				return done(null, false, req.flash('loginMessage', 'Oops! Wrong password.')); // create the loginMessage and save it to session as flashdata
 
 			// all is well, return successful user
+			console.log(rows);
 			return done(null, rows[0]);			
 
 		});

@@ -20,7 +20,6 @@ gameport        = process.env.PORT || 4004,
 		app             = express(),
 		server          = http.createServer(app),
 		fs = require("fs"),
-		redis = require("redis"),
 		co = require("./cookie.js");
 var allclients = new Array(); //Array of clients
 var passport = require('passport');
@@ -89,9 +88,7 @@ app.get( '/*' , function( req, res, next ) {
 
 		var cookieManager = new co.cookie(req.headers.cookie);
 
-		//Note : to specify host and port : new redis.createClient(HOST, PORT, options)
 		//For default version, you don't need to specify host and port, it will use default one
-		var clientSession = new redis.createClient();
 
 		clientSession.get("sessions/"+cookieManager.get("PHPSESSID"), function(error, result){
 		if(error){
