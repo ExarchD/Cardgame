@@ -19,8 +19,7 @@ gameport        = process.env.PORT || 4004,
 		http            = require('http'),
 		app             = express(),
 		server          = http.createServer(app),
-		fs = require("fs"),
-		co = require("./cookie.js");
+		fs = require("fs");
 var allclients = new Array(); //Array of clients
 var passport = require('passport');
 var flash    = require('connect-flash');
@@ -38,21 +37,6 @@ app.set('view engine', 'ejs');
 app.use(session({ secret: 'ilovescotchscotchyscotchscotch' })); // session secret
 app.use(passport.initialize());
 app.use(passport.session()); // persistent login sessions
-app.use(flash()); // use connect-flash for flash messages stored in session
-
-// app.use(session({
-// 	secret: 'appsecret',
-// 	resave: false,
-// 	saveUninitialized: true,
-// 	cookie: {
-// 		secure: true,
-// 		maxAge: new Date(Date.now() + 3600000)
-// 	}
-// }));
-
-// app.use(session({ secret: 'ilovescotchscotchyscotchscotch' })); // session secret
-// app.use(passport.initialize());
-// app.use(passport.session()); // persistent login sessions
 app.use(flash()); // use connect-flash for flash messages stored in session
 require('./config/passport')(passport);
 require('./server/routes.js')(app, passport);
@@ -75,49 +59,19 @@ console.log('\t :: Express :: Listening on port ' + gameport );
 var clientid;
 var clientname;
 
-app.get( '/*' , function( req, res, next ) {
+//app.get( '/*' , function( req, res, next ) {
 
-		//This is the current file they have requested
-		var file = req.params[0];
+//		//This is the current file they have requested
+//		var file = req.params[0];
 
-		//For debugging, we can track what files are requested.
-		if(verbose) console.log('\t :: Express :: file requested : ' + file);
+//		//For debugging, we can track what files are requested.
+//		if(verbose) console.log('\t :: Express :: file requested : ' + file);
 
-		//Send the requesting client the file.
-		// res.sendfile( __dirname + '/' + file );
 
-		var cookieManager = new co.cookie(req.headers.cookie);
+//		//For default version, you don't need to specify host and port, it will use default one
 
-		//For default version, you don't need to specify host and port, it will use default one
 
-		try {
-
-		console.log("result exist");
-		var o = JSON.parse(result);
-		var arr = Object.keys(o).map(function(k) { return o[k] });
-		clientid = arr[0];
-		clientname = arr[1];
-		console.log(arr[1]);
-
-		app.get( '/game_lobby', function( req, res ){
-		console.log('trying to load %s', __dirname + '/game_lobby.html');
-		res.sendfile( '/game_lobby.html' , { root:__dirname });
-		});
-		app.get( '/', function( req, res ){
-		console.log('trying to load %s', __dirname + '/index.html');
-		res.sendfile( '/index.html' , { root:__dirname });
-		});
-		res.sendfile( __dirname + '/' + file );
-		}
-		catch(err) {
-		console.log("session does not exist");
-		res.statusCode = 302; 
-		res.setHeader("Location", "127.0.0.1:80/cardgame/login.php");
-		res.end();
-		}
-		});
-
-		}); //app.get *
+//		}); //app.get *
 
 
 /* Socket.IO server set up. */
