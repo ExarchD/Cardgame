@@ -3,7 +3,7 @@ var socket = io.connect();
 
 app.config(['$routeProvider', function($routeProvider) {
 	$routeProvider.when('/', {
-		templateUrl: '/general_lobby_angularq.ejs'
+		templateUrl: '/general_lobby.ejs'
 	});
 }]);
 
