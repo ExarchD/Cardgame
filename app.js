@@ -23,7 +23,40 @@ gameport        = process.env.PORT || 4004,
 		redis = require("redis"),
 		co = require("./cookie.js");
 var allclients = new Array(); //Array of clients
+var passport = require('passport');
+var flash    = require('connect-flash');
+var session      = require('express-session');
+var morgan       = require('morgan');
+var cookieParser = require('cookie-parser');
+var bodyParser   = require('body-parser');
 
+app.use(morgan('dev')); // log every request to the console
+app.use(cookieParser()); // read cookies (needed for auth)
+app.use(bodyParser()); // get information from html forms
+
+app.set('view engine', 'ejs');
+
+app.use(session({ secret: 'ilovescotchscotchyscotchscotch' })); // session secret
+app.use(passport.initialize());
+app.use(passport.session()); // persistent login sessions
+app.use(flash()); // use connect-flash for flash messages stored in session
+
+// app.use(session({
+// 	secret: 'appsecret',
+// 	resave: false,
+// 	saveUninitialized: true,
+// 	cookie: {
+// 		secure: true,
+// 		maxAge: new Date(Date.now() + 3600000)
+// 	}
+// }));
+
+// app.use(session({ secret: 'ilovescotchscotchyscotchscotch' })); // session secret
+// app.use(passport.initialize());
+// app.use(passport.session()); // persistent login sessions
+app.use(flash()); // use connect-flash for flash messages stored in session
+require('./config/passport')(passport);
+require('./server/routes.js')(app, passport);
 /* Express server set up. */
 
 //The express server handles passing our content to the browser,
