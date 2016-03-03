@@ -90,10 +90,6 @@ app.get( '/*' , function( req, res, next ) {
 
 		//For default version, you don't need to specify host and port, it will use default one
 
-		clientSession.get("sessions/"+cookieManager.get("PHPSESSID"), function(error, result){
-		if(error){
-		console.log("error : "+error);
-		}
 		try {
 
 		console.log("result exist");
