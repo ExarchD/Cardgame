@@ -35,12 +35,26 @@ app.use(express.static(__dirname + '/views'));
 
 app.set('view engine', 'ejs');
 
+var fs = require('fs');
+var path = __dirname + '/game/configs';
+var game_configs= new Array();
+var raw_configs=fs.readdirSync(path);
+raw_configs.forEach(function(entry) {
+        var res = entry.split(/[._]/);
+	var key1 = "game";
+	var key2 = "players";
+	var obj = {};
+	obj[key1] = res[1]
+	obj[key2] = res[2]
+	game_configs.push(obj);
+});
+
 app.use(session({ secret: 'ilovescotchscotchyscotchscotch' })); // session secret
 app.use(passport.initialize());
 app.use(passport.session()); // persistent login sessions
 app.use(flash()); // use connect-flash for flash messages stored in session
 require('./config/passport')(passport);
-require('./server/routes.js')(app, passport);
+require('./server/routes.js')(app, passport, game_configs);
 /* Express server set up. */
 
 //The express server handles passing our content to the browser,
@@ -87,7 +101,7 @@ var sio = io.listen(server);
 //See http://socket.io/
 sio.configure(function (){
 
-	sio.set('log level', 3);
+	sio.set('log level', 0);
 
 	sio.set('authorization', function (handshakeData, callback) {
 		callback(null, true); // error first callback style
@@ -95,38 +109,30 @@ sio.configure(function (){
 
 });
 
-	var users =  new Array();
+var users =  new Array();
 sio.sockets.on('connection', function (client) {
 
 	client.on('player_login', function (data) {
 
-	client.userid = UUID();
-	client.username = data;
+		client.userid = UUID();
+		client.username = data;
 
-	//tell the player they connected, giving them their id
-	allclients.push(client.username);
-	allclients.sort();
+		//tell the player they connected, giving them their id
+		allclients.push(client.username);
+		allclients.sort();
 
-	// add username to list of connected clients
-	// and push to all connected sockets. This keeps the current number of users updated
+		// add username to list of connected clients
+		// and push to all connected sockets. This keeps the current number of users updated
 	});
 
 
 	client.on('player_login', function (data) {
-		console.log(data);
-		console.log(data);
-		console.log(data);
-		console.log(data);
-		console.log(data);
-		console.log(data);
-		console.log(data);
-		console.log(data);
-	users.push(client); // without .sessionId
-	for (var u in users)    {
-		users[u].emit('update_player_list', {
-			all_connected: allclients
-		});
-	}
+		users.push(client); // without .sessionId
+		for (var u in users)    {
+			users[u].emit('update_player_list', {
+				all_connected: allclients
+			});
+		}
 	});
 
 	console.log('\t socket.io:: player ' + client.username + ' connected');

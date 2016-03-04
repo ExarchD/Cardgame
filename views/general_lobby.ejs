@@ -21,6 +21,8 @@ body        { padding-top:80px; }
 
 var socket = io.connect('http://localhost:4004');
 var ugly =<%-JSON.stringify(user)%>
+var ugly2=<%-JSON.stringify(games)%>
+console.log(ugly2[0].players);
 socket.emit("player_login", ugly.user_name);
 		</script>
 		<style>

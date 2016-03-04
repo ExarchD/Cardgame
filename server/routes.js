@@ -1,4 +1,5 @@
-module.exports = function(app, passport) {
+module.exports = function(app, passport, game_configs) {
+	console.log(game_configs);
 
 	// =====================================
 	// HOME PAGE (with login links) ========
@@ -57,17 +58,17 @@ module.exports = function(app, passport) {
 	});
 
 	app.get('/general_lobby', isLoggedIn, function(req, res) {
-		console.log(req.user);
 		res.render('general_lobby.ejs', {
-			user : req.user // get the user out of session and pass to template
+			user : req.user, // get the user out of session and pass to template
+			games : game_configs // get the user out of session and pass to template
 		});
 	});
-	app.get('/general_lobby', isLoggedIn, function(req, res) {
-		console.log(req.user);
-		res.render('general_lobby.ejs', {
-			user : req.user // get the user out of session and pass to template
-		});
-	});
+	// app.get('/general_lobby', isLoggedIn, function(req, res) {
+	// 	console.log(req.user);
+	// 	res.render('general_lobby.ejs', {
+	// 		user : req.user // get the user out of session and pass to template
+	// 	});
+	// });
 
 	// =====================================
 	// LOGOUT ==============================
