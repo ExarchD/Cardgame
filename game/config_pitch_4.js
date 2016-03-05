@@ -4,6 +4,10 @@
 
 var CARDS_DEALT = 6; //This is a constant, don't change the value
 var FOUR_PLAYER_GAME = 4; //This is a constant, don't change.
+
+
+// Everywhere you see "// ***GAME STATE UPDATE***"
+// is a place where we probably need to send and receive sockets
 function config_pitch_4( playerArray )
 {
 	// Things to send to client
@@ -23,7 +27,7 @@ function config_pitch_4( playerArray )
 	var bidsAllowed = [1,1,1,1,1,1]; // bidsAllowed is an array of booleans corresponding to [0,1,2,3,4,11], use 1 for true, 0 for false
 
 	//Game control and player tracking variables
-	var currentDealer = 0; //Index of the current dealer
+	var iCurrentDealer = 0; //Index of the current dealer
 	var iPlayerToLead = 0;
 	var leadSuit = "c";
 	var tempCard = new Card( 0,0);
@@ -60,6 +64,11 @@ function config_pitch_4( playerArray )
 	{
 		score.push(0);
 	}
+	//Initializing bids
+	for( iBid = 0; iBid < playerArray.length; iBid++ )
+	{
+		bids.push(-1);
+	}
 	//Initializing instandPointTracker
 	for( iNumTeam = 0; iNumTeam < playerArray.legnth/2; iNumTeam++)
 	{
@@ -88,7 +97,7 @@ function config_pitch_4( playerArray )
 	{
 		if( playerArray[i].teamNum != (iPlayer + 1)%(playerArray.length/2) )
 		{
-			//Return to lobby
+			//Return to lobby... or write code to check that there are 2 on each team, then rearrange so in right positions
 		}
 	}
 	
@@ -112,7 +121,7 @@ function config_pitch_4( playerArray )
 		for( iDeal = 0; iDeal < CARDS_DEALT * playerArray.length; iDeal++)
 		{
 			//Takeing card from top of deck, putting in players hand, starting with perons left of dealer
-			playerArray[(currentDealer + 1 + iDeal)%playerArray.length].receiveCardHand( pitch4Deck.takeTopCard() );
+			playerArray[(iCurrentDealer + 1 + iDeal)%playerArray.length].receiveCardHand( pitch4Deck.takeTopCard() );
 		}
 		
 		//Sorting everyone's hand for them
@@ -121,6 +130,7 @@ function config_pitch_4( playerArray )
 			playerArray[i].sortHand();  //This function doesn't currently do anything.
 		}
 		
+		// ***GAME STATE UPDATE***
 		//NEED TO START PRINTING EVERYONE'S HAND HERE!!!
 		
 		// False case is 0, someone had a pitch hand
@@ -128,6 +138,7 @@ function config_pitch_4( playerArray )
 		{
 			// ANNOUCEMENT THAT SOMEONE HAD A PITCH HAND
 			// SHOW EVERYONES CARDS
+			// ***GAME STATE UPDATE***
 			// HAVE EVERYONE CLICK BUTTON FOR REDEAL
 		}
 		else
@@ -137,14 +148,15 @@ function config_pitch_4( playerArray )
 			//Bidding
 			for( iBid = 0; iBid < playerArray.length; iBid++)
 			{
+				// ***GAME STATE UPDATE***
 				// Need special bidding screen printed for all players, has whose turn it is to bid
-				//if( playerArray[ (currentDealer + 1 + iBid) % playerArray.length ].servUserID == ???.servUserID )
+				//if( playerArray[ (iCurrentDealer + 1 + iBid) % playerArray.length ].servUserID == ???.servUserID )
 				//{
 					// Call screen that can print pass, 1, 2, 3, 4, Shoot if it their turn to bid
 					
 				//}
 				// record bid in 
-				//bids[(currentDealer + 1 + iBid) % playerArray.length] = button result
+				//bids[(iCurrentDealer + 1 + iBid) % playerArray.length] = button result
 				if ( bids[iBid] == 0 )
 				{
 					//Do nothing
@@ -228,6 +240,7 @@ function config_pitch_4( playerArray )
 						{
 							//Assigning trump suit
 							trumpSuit = tempCard.suit;
+							// ***GAME STATE UPDATE***
 							
 							//Default is first card played is both high and low, will sort through all cards to find out
 							highCard.suit = tempCard.suit;
@@ -358,8 +371,11 @@ function config_pitch_4( playerArray )
 		
 		//*********************RESETTING round variables!
 		
-		//Clear all bids with bids.splice(0,bids.length);
-		bids.splice(0,bids.length);
+		//Replace all bids with default bid of -1;
+		for( iBid = 0; iBid < playerArray.length; iBid++ )
+		{
+			bids[iBid] = -1;
+		}
 		
 		//Resets all allowed bids to true (1), remember bidsAllowed[] corresponds to numbers [0,1,2,3,4,11]
 		for( iBidAllowedReset = 0; iBidAllowedReset < bidsAllowed.length; iBidAllowedReset++)
