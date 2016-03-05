@@ -40,7 +40,7 @@ Deck.prototype.fillDeck = function fillDeck()
 {
 	// Array for suit characters
 	// Default 0 = c    1 = s    2 = h    3 = d
-	var suitArray = [c, s, h, d];
+	var suitArray = ["c", "s", "h", "d"];
 	var minRank = 2; //Minimum card is a 2
 	var maxRank = 14; //Max rank is Ace = 14
 
@@ -62,7 +62,7 @@ Deck.prototype.fillDeck = function fillDeck()
 Deck.prototype.fillDeck = function fillDeck(totalSuit, totalRank)
 {
 	// Array for suit characters
-	var suitArray = [c, s, h, d];
+	var suitArray = ["c", "s", "h", "d"];
 
 	var suitTemp; //Used to make suits with more than 1 character, ie if more than 4 suits
 
