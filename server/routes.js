@@ -1,4 +1,4 @@
-module.exports = function(app, passport, game_configs, sio) {
+module.exports = function(app, passport, game_configs, io) {
 	console.log(game_configs);
 
 	// =====================================
@@ -57,6 +57,15 @@ module.exports = function(app, passport, game_configs, sio) {
 		});
 	});
 
+	// Generate a uuid for the game, update the game list on the general lobby, redirect to 
+	// game lobby with an id. 
+	app.post('/general_lobby', function(req, res) {
+		res.render('general_lobby.ejs', {
+			user : req.user, // get the user out of session and pass to template
+			games : game_configs // get the user out of session and pass to template
+		});
+	});
+
 	app.get('/general_lobby', isLoggedIn, function(req, res) {
 		res.render('general_lobby.ejs', {
 			user : req.user, // get the user out of session and pass to template
@@ -64,6 +73,7 @@ module.exports = function(app, passport, game_configs, sio) {
 		});
 	});
 
+	// also pass the uuid, when people login, they should be connected to the appropriate room
 	app.get('/game_lobby', isLoggedIn, function(req, res) {
 		console.log(req.body.name);
 		console.log(req.body.name);

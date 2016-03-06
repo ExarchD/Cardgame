@@ -9,16 +9,15 @@
     */
 
 var
-gameport        = process.env.PORT || 4004,
+gameport        = process.env.PORT || 4839,
 
-		io              = require('socket.io'),
 		express         = require('express'),
 		UUID            = require('node-uuid'),
 
 		verbose         = false,
-		http            = require('http'),
-		app             = express(),
-		server          = http.createServer(app),
+		app             = require('express')();
+		server          = require('http').createServer(app),
+		io              = require('socket.io')(server),
 		fs = require("fs");
 var allclients = new Array(); //Array of clients
 var passport = require('passport');
@@ -32,7 +31,6 @@ app.use(morgan('dev')); // log every request to the console
 app.use(cookieParser()); // read cookies (needed for auth)
 app.use(bodyParser()); // get information from html forms
 app.use(express.static(__dirname + '/views'));
-
 app.set('view engine', 'ejs');
 
 var fs = require('fs');
@@ -49,13 +47,16 @@ raw_configs.forEach(function(entry) {
 		game_configs.push(obj);
 });
 
-var sio = io.listen(server);
+// var sio = io.listen(server);
 app.use(session({ secret: 'ilovescotchscotchyscotchscotch' })); // session secret
 app.use(passport.initialize());
 app.use(passport.session()); // persistent login sessions
 app.use(flash()); // use connect-flash for flash messages stored in session
 require('./config/passport')(passport);
-require('./server/routes.js')(app, passport, game_configs, sio);
+
+
+
+require('./server/routes.js')(app, passport, game_configs);
 /* Express server set up. */
 app.post('/general_lobby', function(req, res) {
 	console.log(req.body.name);
@@ -70,7 +71,7 @@ app.post('/general_lobby', function(req, res) {
 //so keep this in mind - this is not a production script but a development teaching tool.
 
 //Tell the server to listen for incoming connections
-server.listen(gameport)
+server.listen(gameport);
 	var toType = function(obj) {
 		return ({}).toString.call(obj).match(/\s([a-zA-Z]+)/)[1].toLowerCase()
 	}
@@ -91,18 +92,9 @@ var clientname;
 
 //Configure the socket.io connection settings.
 //See http://socket.io/
-sio.configure(function (){
-
-	sio.set('log level', 3);
-
-	sio.set('authorization', function (handshakeData, callback) {
-		callback(null, true); // error first callback style
-	});
-
-});
 
 var users =  new Array();
-sio.sockets.on('connection', function (client) {
+io.sockets.on('connection', function (client) {
 
 	client.on('player_login', function (data) {
 
@@ -143,7 +135,7 @@ sio.sockets.on('connection', function (client) {
 	client.on('disconnect', function () {
 		console.log('disconnecting');
 
-		delete users[users.indexOf(sio.sockets)];
+		delete users[users.indexOf(io.sockets)];
 		//Useful to know when soomeone disconnects
 		console.log('\t socket.io:: client disconnected ' + client.userid + ' ' + client.username);
 		// Remove username from the list of connected clients

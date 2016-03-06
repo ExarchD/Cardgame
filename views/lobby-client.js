@@ -1,6 +1,18 @@
 var app = angular.module('sampleApp', ['ngRoute']);
 var socket = io.connect();
 
+app.config(['$httpProvider',function ($httpProvider) {
+	var sessionId = "{!$Api.Session_ID}";
+
+	$httpProvider.defaults.useXDomain = true;
+	delete $httpProvider.defaults.headers.common["X-Requested-With"];
+	$httpProvider.defaults.headers.common["Access-Control-Allow-Origin"] = "*";
+	$httpProvider.defaults.headers.common["Accept"] = "application/json";
+	$httpProvider.defaults.headers.common["content-type"] = "application/json";
+	$httpProvider.defaults.headers.common['Authorization'] = "OAuth " + sessionId ;
+	$httpProvider.defaults.headers.common['X-User-Agent'] = "MyClient" ;
+}]) ; 
+
 app.config(['$routeProvider', function($routeProvider) {
 	$routeProvider.when('/', {
 		templateUrl: '/general_lobby.ejs'
@@ -50,4 +62,4 @@ function logout () {
 
 	socket.emit('disconnect');
 
-	};
+};
