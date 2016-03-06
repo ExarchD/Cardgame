@@ -81,20 +81,6 @@ console.log('\t :: Express :: Listening on port ' + gameport );
 var clientid;
 var clientname;
 
-//app.get( '/*' , function( req, res, next ) {
-
-//		//This is the current file they have requested
-//		var file = req.params[0];
-
-//		//For debugging, we can track what files are requested.
-//		if(verbose) console.log('\t :: Express :: file requested : ' + file);
-
-
-//		//For default version, you don't need to specify host and port, it will use default one
-
-
-//		}); //app.get *
-
 
 /* Socket.IO server set up. */
 
@@ -107,7 +93,7 @@ var clientname;
 //See http://socket.io/
 sio.configure(function (){
 
-	sio.set('log level', 0);
+	sio.set('log level', 3);
 
 	sio.set('authorization', function (handshakeData, callback) {
 		callback(null, true); // error first callback style
