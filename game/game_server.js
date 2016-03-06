@@ -1,5 +1,3 @@
-var game = new Phaser.Game(800, 600, Phaser.AUTO, 'button-test', { preload: preload, create: create });
-
 ////// Start Card class //////
 
 // Member variables for Card class:
@@ -42,7 +40,7 @@ Deck.prototype.fillDeck = function fillDeck()
 {
 	// Array for suit characters
 	// Default 0 = c    1 = s    2 = h    3 = d
-	var suitArray = [c, s, h, d];
+	var suitArray = ["c", "s", "h", "d"];
 	var minRank = 2; //Minimum card is a 2
 	var maxRank = 14; //Max rank is Ace = 14
 
@@ -64,7 +62,7 @@ Deck.prototype.fillDeck = function fillDeck()
 Deck.prototype.fillDeck = function fillDeck(totalSuit, totalRank)
 {
 	// Array for suit characters
-	var suitArray = [c, s, h, d];
+	var suitArray = ["c", "s", "h", "d"];
 
 	var suitTemp; //Used to make suits with more than 1 character, ie if more than 4 suits
 
@@ -200,9 +198,9 @@ Player.prototype.playCardHand = function playCardHand( handCardIndex )
 // Function used to get rid of all cards a player has
 Player.prototype.emptyAllDecks = function emptyAllDecks()
 {
-	this.myHand.splice(0,myHand.length);
-	this.myCardsWon.splice(0,myCardsWon.length);
-	this.myPiles.splice(0,myPiles.length);
+	this.myHand.cardArray.splice(0,myHand.cardArray.length);
+	this.myCardsWon.cardArray.splice(0,myCardsWon.cardArray.length);
+	this.myPiles.cardArray.splice(0,myPiles.cardArray.length);
 };
 
 
@@ -257,68 +255,4 @@ function GameConfig( gameTypeID, playerArray)
 // 4) Tablulate and update scores at the end of the round
 
 
-
-
 ////// End Game class //////
-
-
-
-
-function preload() 
-{
-	game.load.spritesheet('button', 'assets/button_sprite_sheet.png', 193, 71);
-	game.load.image('background','assets/starfield.jpg');
-	game.load.spritesheet('cards', 'assets/52playingCardsSpriteSheet72x96.png', 72, 96)
-}
-
-var card_number = 6; // Number of cards on screen, will be buttons
-var button = new Array(); //Array of butons for screen
-var background; // back ground slide
-
-function create() 
-{
-	game.stage.backgroundColor = '#182d3b'; // Hex code color 
-
-	background = game.add.tileSprite(0, 0, 800, 600, 'background');
-
-	// Variables X and Y locations for Your Cards
-
-	var xPixFromCenter;
-	var yPix = 400;
-	var xPix_FirstCard = -325;
-	var xPix_spacing = 100;
-
-	for (i=0; i < card_number; i++)
-	{
-		var xPixFromCenter = xPix_FirstCard + xPix_spacing*i; //spacing is 40 pixels
-
-		//Button constructor, upFrame is left blank, not used
-		button[i] = game.add.button(game.world.centerX + xPixFromCenter, yPix, 'cards', actionOnClick, this, 1, 0, 2);
-		button[i].onInputOver.add(over, this);
-		button[i].onInputOut.add(out, this);
-		button[i].onInputUp.add(up, this);
-	}
-}
-
-
-function up() 
-{
-	console.log('button up', arguments);
-}
-
-function over() 
-{
-	console.log('button over');
-}
-
-function out() 
-{
-	console.log('button out');
-}
-
-function actionOnClick() 
-{
-
-	background.visible =! background.visible;
-
-}
