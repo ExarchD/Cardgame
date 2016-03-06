@@ -198,9 +198,9 @@ Player.prototype.playCardHand = function playCardHand( handCardIndex )
 // Function used to get rid of all cards a player has
 Player.prototype.emptyAllDecks = function emptyAllDecks()
 {
-	this.myHand.splice(0,myHand.length);
-	this.myCardsWon.splice(0,myCardsWon.length);
-	this.myPiles.splice(0,myPiles.length);
+	this.myHand.cardArray.splice(0,myHand.cardArray.length);
+	this.myCardsWon.cardArray.splice(0,myCardsWon.cardArray.length);
+	this.myPiles.cardArray.splice(0,myPiles.cardArray.length);
 };
 
 
