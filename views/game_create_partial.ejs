@@ -1,11 +1,41 @@
-<div>
-	Players:
+<div class="col-sm-6">
+	<div  class="well">
+		<form id=myForm action="http://127.0.0.1:4004/general_lobby" method="post">
+			<br>
+			Available games:
+			<select style="float:right", name="type">
+				<% var ugly2=games%>
+				<% for (i=0; i < ugly2.length; i++) { %>
+				<option value="i"><%=ugly2[i].game+"("+ugly2[i].players+" player)"%></option>    
+				<%}%>
+			</select>
+			</br>
+			<br>
+			Game name:
+			<input style="float:right" type="text" name="name">
+			</br>
+			<br>
+			Password:
+			<input style="float:right" type="password" name="pass">
+			</br>
+			<br>
+			<!-- <button style="float:right" type="button" onclick="alert('Hello World!')">Create Game!</button> -->
+			<button style="float:right" type="button" onclick=game_create()>Create Game!</button>
+			</br>
 
-	<ul>
-		<% var ugly2=games%>
-		<% for (i=0; i < ugly2.length; i++) { %>
-		<li><%=ugly2[i].players%></li>    
-		<%}%>
-	</ul>
+		</form>
+	</div>
+</div>
+<div class="col-sm-6">
+	<div class="well text-left">
+	Info about the game
+	</div>
+
+
+	<script>
+	function game_create() {
+	document.getElementById("myForm").submit();
+	}
+	</script>
 
 </div>

@@ -1,5 +1,6 @@
 <html ng-app="sampleApp">
 	<head>
+		<meta name="viewport" content="width=device-width, initial-scale=1">
 		<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
 		<link rel="stylesheet" href="//netdna.bootstrapcdn.com/bootstrap/3.0.2/css/bootstrap.min.css"> <!-- load bootstrap css -->
 		<link rel="stylesheet" href="//netdna.bootstrapcdn.com/font-awesome/4.0.3/css/font-awesome.min.css"> <!-- load fontawesome -->
@@ -32,10 +33,7 @@ body        { padding-top:80px; word-wrap:break-word; }
 		<div class="container">
 
 			<div class="page-header text-center">
-				<h1><span class="fa fa-anchor"></span> Profile Page</h1>
-				<!-- <a href="/general_lobby" class="btn btn-default btn-sm">Get to the Games!</a> -->
-				<a href="/logout" class="btn btn-default btn-sm">Logout</a>
-				<a href="/profile" class="btn btn-default btn-sm">Profile</a>
+				<h1><span class="fa fa-play-circle-o"></span> Card Games Galore</h1>
 			</div>
 			<ul class="nav nav-tabs">
 				<li class="active"><a data-toggle="tab" href="#lobby">Lobby</a></li>
@@ -45,30 +43,41 @@ body        { padding-top:80px; word-wrap:break-word; }
 			</ul>
 			<div class="tab-content">
 				<div id="lobby" class="tab-pane fade in active">
-					<div class="row">
-
-						<!-- LOCAL INFORMATION -->
-						<div class="col-sm-6">
-							<div>
-								Players:
-								<ul style="list-style-type:none; height:420px; width:220px; border:1px solid #ccc; overflow:auto;">
-									<li ng-repeat="customer in newCustomers track by $index">{{customer}}</li>
-								</ul>
-							</div>
-						</div>
-
+					<!-- <div class="row"> -->
+					<div class="col-md-4">
+						<h3>Players</h3>
+						<ul style="list-style-type:none; height:420px; width:220px; border:1px solid #ccc; overflow:auto;">
+							<li ng-repeat="customer in newCustomers track by $index">{{customer}}</li>
+						</ul>
 					</div>
-				</div>
-				<div id="create" class="tab-pane fade">
-					<%- include game_create_partial.ejs %>
-				</div>
-				<div id="profile" class="tab-pane fade">
-					<%- include profile_partial.ejs %>
+					<div class="col-md-8">
+					<table class="table table-bordered table-striped">
+						<h3>Games</h3>
+						<tr>
+							<td>Jill</td>
+							<td>Smith</td> 
+							<td>50</td>
+						</tr>
+						<tr>
+							<td>Eve</td>
+							<td>Jackson</td> 
+							<td>94</td>
+						</tr>
+					</table>
+					</div>
 
-				</div>
-				<div id="logout" class="tab-pane fade">
-				</div>
+					<!-- </div> -->
 			</div>
+			<div id="create" class="tab-pane fade">
+				<%- include game_create_partial.ejs %>
+			</div>
+			<div id="profile" class="tab-pane fade">
+				<%- include profile_partial.ejs %>
+
+			</div>
+			<div id="logout" class="tab-pane fade">
+			</div>
+		</div>
 		</div>
 	</body>
 </html>

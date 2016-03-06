@@ -1,4 +1,4 @@
-module.exports = function(app, passport, game_configs) {
+module.exports = function(app, passport, game_configs, sio) {
 	console.log(game_configs);
 
 	// =====================================
@@ -63,12 +63,16 @@ module.exports = function(app, passport, game_configs) {
 			games : game_configs // get the user out of session and pass to template
 		});
 	});
-	// app.get('/general_lobby', isLoggedIn, function(req, res) {
-	// 	console.log(req.user);
-	// 	res.render('general_lobby.ejs', {
-	// 		user : req.user // get the user out of session and pass to template
-	// 	});
-	// });
+
+	app.get('/game_lobby', isLoggedIn, function(req, res) {
+		console.log(req.body.name);
+		console.log(req.body.name);
+		console.log(req.body.name);
+		console.log(req.body.name);
+		res.render('game_lobby.ejs', {
+			user : req.user // get the user out of session and pass to template
+		});
+	});
 
 	// =====================================
 	// LOGOUT ==============================

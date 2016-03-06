@@ -10,43 +10,15 @@ body        { padding-top:80px; }
 
 	<body ng-controller="IndexController">
 		<script src="/socket.io/socket.io.js"></script>
-		<script src="http://ajax.googleapis.com/ajax/libs/angularjs/1.4.8/angular.js"></script>
-		<script src="http://ajax.googleapis.com/ajax/libs/angularjs/1.4.8/angular-route.js"></script>
 		<script type='text/javascript'>
-socket.emit("player_login", ugly.user_name);
+		socket.emit("player_login", ugly.user_name);
 		</script>
 		<style>
 body        { padding-top:80px; word-wrap:break-word; }
 		</style>
 	</head>
 	<body>
-		<div class="container">
-
-			<div class="page-header text-center">
-				<h1><span class="fa fa-anchor"></span> Profile Page</h1>
-				<!-- <a href="/general_lobby" class="btn btn-default btn-sm">Get to the Games!</a> -->
-				<a href="/logout" class="btn btn-default btn-sm">Logout</a>
-				<a href="/profile" class="btn btn-default btn-sm">Profile</a>
-			</div>
-
-			<div class="row">
-
-				<!-- LOCAL INFORMATION -->
-				<div class="col-sm-6">
-					<div>
-		<style>
-ul        {  list-style-type:none; height:420px; width:220px; border:1px solid #ccc; overflow:auto;}
-		</style>
-						Players:
-						<ul>
-							<li ng-repeat="customer in newCustomers track by $index">{{customer}}</li>
-						</ul>
-					</div>
-				</div>
-
-			</div>
-
-		</div>
+		HI, this is the game lobby
 	</body>
 </html>
 

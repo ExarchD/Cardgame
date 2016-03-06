@@ -40,22 +40,29 @@ var path = __dirname + '/game/configs';
 var game_configs= new Array();
 var raw_configs=fs.readdirSync(path);
 raw_configs.forEach(function(entry) {
-        var res = entry.split(/[._]/);
+	var res = entry.split(/[._]/);
 	var key1 = "game";
 	var key2 = "players";
 	var obj = {};
 	obj[key1] = res[1]
-	obj[key2] = res[2]
-	game_configs.push(obj);
+		obj[key2] = res[2]
+		game_configs.push(obj);
 });
 
+var sio = io.listen(server);
 app.use(session({ secret: 'ilovescotchscotchyscotchscotch' })); // session secret
 app.use(passport.initialize());
 app.use(passport.session()); // persistent login sessions
 app.use(flash()); // use connect-flash for flash messages stored in session
 require('./config/passport')(passport);
-require('./server/routes.js')(app, passport, game_configs);
+require('./server/routes.js')(app, passport, game_configs, sio);
 /* Express server set up. */
+app.post('/general_lobby', function(req, res) {
+	console.log(req.body.name);
+	res.redirect('/game_lobby');
+	//});
+	// sio.emit("hi");
+	});
 
 //The express server handles passing our content to the browser,
 //As well as routing users where they need to go. This example is bare bones
@@ -95,7 +102,6 @@ var clientname;
 //This way, when the client requests '/socket.io/' files, socket.io determines what the client needs.
 
 //Create a socket.io instance using our express server
-var sio = io.listen(server);
 
 //Configure the socket.io connection settings.
 //See http://socket.io/
