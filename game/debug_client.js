@@ -27,8 +27,8 @@ var cardMarginY = Math.ceil((game.height - 4*cardHeight - cardWidth) / 5);
 
 
 //calculate locations of the centers of the hand locations where:
-	//East: (x, 0) 
-	//South: (0, y) 
+	//East: (x, 0)
+	//South: (0, y)
 	//West: (-x, 0)
 	//North (0, -y)
 var playerPositionX = 1.5 * (cardMarginX + cardHeight);
@@ -52,48 +52,48 @@ function create()
 	player1.hand.addCards
 	(
 		[  // Array of 6 Card objects
-		 new LocalCard(-2.5*cardSeperation, playerPositionY, 0, true, 0, 'c'),
-	  	 new LocalCard(-1.5*cardSeperation, playerPositionY, 0, true, 12, 'c'),
-	  	 new LocalCard(-0.5*cardSeperation, playerPositionY, 0, true, 11, 'c'),
-	  	 new LocalCard(+0.5*cardSeperation, playerPositionY, 0, true, 10, 'c'),
-	  	 new LocalCard(+1.5*cardSeperation, playerPositionY, 0, true, 9, 'c'),
-	  	 new LocalCard(+2.5*cardSeperation, playerPositionY, 0, true, 1, 'c')
+		 new LocalCard(-2.5*cardSeperation, playerPositionY, 0, true, 14, 'c'),
+	  	 new LocalCard(-1.5*cardSeperation, playerPositionY, 0, true, 13, 'c'),
+	  	 new LocalCard(-0.5*cardSeperation, playerPositionY, 0, true, 12, 'c'),
+	  	 new LocalCard(+0.5*cardSeperation, playerPositionY, 0, true, 11, 'c'),
+	  	 new LocalCard(+1.5*cardSeperation, playerPositionY, 0, true, 10, 'c'),
+	  	 new LocalCard(+2.5*cardSeperation, playerPositionY, 0, true, 2, 'c')
 		]
 	);
 
 	player2.hand.addCards
 	(
 		[  // Array of 6 Card objects
-		 new LocalCard(-playerPositionX, -2.5*cardSeperation, 90, true, 0, 's'),
-	  	 new LocalCard(-playerPositionX, -1.5*cardSeperation, 90, true, 12, 's'),
-	  	 new LocalCard(-playerPositionX, -0.5*cardSeperation, 90, true, 11, 's'),
-	  	 new LocalCard(-playerPositionX, +0.5*cardSeperation, 90, true, 10, 's'),
-	  	 new LocalCard(-playerPositionX, +1.5*cardSeperation, 90, true, 9, 's'),
-	  	 new LocalCard(-playerPositionX, +2.5*cardSeperation, 90, true, 1, 's')
+		 new LocalCard(-playerPositionX, -2.5*cardSeperation, 90, true, 14, 's'),
+	  	 new LocalCard(-playerPositionX, -1.5*cardSeperation, 90, true, 13, 's'),
+	  	 new LocalCard(-playerPositionX, -0.5*cardSeperation, 90, true, 12, 's'),
+	  	 new LocalCard(-playerPositionX, +0.5*cardSeperation, 90, true, 11, 's'),
+	  	 new LocalCard(-playerPositionX, +1.5*cardSeperation, 90, true, 10, 's'),
+	  	 new LocalCard(-playerPositionX, +2.5*cardSeperation, 90, true, 2, 's')
 		]
 	);
 
 	player3.hand.addCards
 	(
 		[  // Array of 6 Card objects
-		 new LocalCard(+2.5*cardSeperation, -playerPositionY, 0, true, 0, 'h'),
-	  	 new LocalCard(+1.5*cardSeperation, -playerPositionY, 0, true, 12, 'h'),
-	  	 new LocalCard(+0.5*cardSeperation, -playerPositionY, 0, true, 11, 'h'),
-	  	 new LocalCard(-0.5*cardSeperation, -playerPositionY, 0, true, 10, 'h'),
-	  	 new LocalCard(-1.5*cardSeperation, -playerPositionY, 0, true, 9, 'h'),
-	  	 new LocalCard(-2.5*cardSeperation, -playerPositionY, 0, true, 1, 'h')
+		 new LocalCard(+2.5*cardSeperation, -playerPositionY, 0, true, 14, 'h'),
+	  	 new LocalCard(+1.5*cardSeperation, -playerPositionY, 0, true, 13, 'h'),
+	  	 new LocalCard(+0.5*cardSeperation, -playerPositionY, 0, true, 12, 'h'),
+	  	 new LocalCard(-0.5*cardSeperation, -playerPositionY, 0, true, 11, 'h'),
+	  	 new LocalCard(-1.5*cardSeperation, -playerPositionY, 0, true, 10, 'h'),
+	  	 new LocalCard(-2.5*cardSeperation, -playerPositionY, 0, true, 2, 'h')
 		]
 	);
 
 	player4.hand.addCards
 	(
 		[  // Array of 6 Card objects
-		 new LocalCard(playerPositionX, +2.5*cardSeperation, 90, true, 0, 'd'),
-	  	 new LocalCard(playerPositionX, +1.5*cardSeperation, 90, true, 12, 'd'),
-	  	 new LocalCard(playerPositionX, +0.5*cardSeperation, 90, true, 11, 'd'),
-	  	 new LocalCard(playerPositionX, -0.5*cardSeperation, 90, true, 10, 'd'),
-	  	 new LocalCard(playerPositionX, -1.5*cardSeperation, 90, true, 9, 'd'),
-	  	 new LocalCard(playerPositionX, -2.5*cardSeperation, 90, true, 1, 'd')
+		 new LocalCard(playerPositionX, +2.5*cardSeperation, 90, true, 14, 'd'),
+	  	 new LocalCard(playerPositionX, +1.5*cardSeperation, 90, true, 13, 'd'),
+	  	 new LocalCard(playerPositionX, +0.5*cardSeperation, 90, true, 12, 'd'),
+	  	 new LocalCard(playerPositionX, -0.5*cardSeperation, 90, true, 11, 'd'),
+	  	 new LocalCard(playerPositionX, -1.5*cardSeperation, 90, true, 10, 'd'),
+	  	 new LocalCard(playerPositionX, -2.5*cardSeperation, 90, true, 2, 'd')
 		]
 	);
 }
@@ -143,7 +143,7 @@ function LocalCard(x, y, angle, isVisible, rank, suit)
 			console.log("(DM) Error: Suit variable initialized to:", suit);
 	}
 
-	this.cardSpriteIndex = 13*this.suitNum + this.rank; // location of this card in the spritesheet
+	this.cardSpriteIndex = 13*this.suitNum + this.rank - 2; // location of this card in the spritesheet
 	this.x = x || 0; // origin is at the center of the screen (default 0)
 	this.y = y || 0; // origin is at the center of the screen (default 0)
 	this.angle = angle || 0; // 0 is upright (default), 90 is tilted sideways clockwise (the center of the card always remains the same)
