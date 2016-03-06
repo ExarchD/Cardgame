@@ -2,21 +2,94 @@
 
 // Code for running a game of 4 person Pitch
 
-function config_Pitch4( playerArray )
+var CARDS_DEALT = 6; //This is a constant, don't change the value
+var FOUR_PLAYER_GAME = 4; //This is a constant, don't change.
+
+
+// Everywhere you see "// ***GAME STATE UPDATE***"
+// is a place where we probably need to send and receive sockets
+function config_pitch_4( playerArray )
 {
-	var score_1 = 0;
-	var score_2 = 0;
-	var pitch4Deck = new Deck();
-	var currentDealer = 0; //Index of the current dealer
-	var bids = [];
-	var bidsAllowed = [];
+	// Things to send to client
+	// score_1, score_2, player's hand, cards in the middle, bids, whose turn it is
 	
+	// Overall Game variables
+	var pitch4Deck = new Deck();
+	var pitchTrickDeck = new Deck();
+	var score = [];
+	 
+
+	
+	//Bidding variables
+	var bids = [];
+	var iMaxBidPlayer = 0; // For keeping track of which player bids the most
+	var tempMaxBid = 0;	
+	var bidsAllowed = [1,1,1,1,1,1]; // bidsAllowed is an array of booleans corresponding to [0,1,2,3,4,11], use 1 for true, 0 for false
+
+	//Game control and player tracking variables
+	var iCurrentDealer = 0; //Index of the current dealer
+	var iPlayerToLead = 0;
+	var iPlayerWonTrick = 0;
+	var leadSuit = "c";
+	var tempCard = new Card( 0,0);
+	var legalPlay = 0; // Variable that will not allow game to advance until player plays a legal card from their hand
+	var iCardButtonClicked = 0; // Index of the button the player clicked, used to see if valid move, if valid will pop card
+								// From player hand and put in center pile
+	
+	//Instand win and scoring control variables
+	var instantPointTracker = []; //Used to tell if win with instant points
+	var tempScore = []; //Used to count points at end of round (THIS IS DIFFERENT THAN INSTANT, INSTANT IS ONLY 2, ACE and JACK)
+	var cardPoints = [];
+	var iHighestCardPointTeam = 0;
+	var jackThisRound = 0; // 1 for true, 0 for false
+	var iPlayerWonJack = 0;
+	var iTeamWonCardPoints = 0;
+	
+	// Trump card variables 
+	var firstRoundCardPlayed = 1; //There are special instructions concerning trump when the first card is played, 1 is true, 0 is false
+	var trumpSuit = "c";
+	var highCard = new Card(0,0);
+	var lowCard = new Card(0,0);
+	var iHighCardOwner = 0;
+	var iLowCardOwner = 0;
+	
+	
+	
+	//******************Initializing game, checking that player array is set up correctly
+		
 	//Checking that the right number of players were passed in
-	if( playerArray.length != 4)
+	if( playerArray.length != FOUR_PLAYER_GAME)
 	{
 		//Return to lobby
 	}
 	
+	//Score array initialization
+	for( iScore = 0; iScore < playerArray.length/2; iScore++)
+	{
+		score.push(0);
+	}
+	//Initializing bids
+	for( iBid = 0; iBid < playerArray.length; iBid++ )
+	{
+		bids.push(-1);
+	}
+	//Initializing instandPointTracker
+	for( iNumTeam = 0; iNumTeam < playerArray.legnth/2; iNumTeam++)
+	{
+		instantPointTracker.push(0);
+	}
+	//Initializing the tempScore for counting points at end of round
+	for( iNumTeam = 0; iNumTeam < playerArray.legnth/2; iNumTeam++)
+	{
+		tempScore.push(0);
+	}
+	//Initializing the cardPoints array for counting cardPoints at end of round
+	for( iNumTeam = 0; iNumTeam < playerArray.legnth/2; iNumTeam++)
+	{
+		cardPoints.push(0);
+	}
+	
+		
 	//Checking that all items in playerArray are of type Player ???
 	for( iPlayer = 0; iPlayer < playerArray.length; iPlayer++)
 	{
@@ -26,14 +99,14 @@ function config_Pitch4( playerArray )
 	//Checking that players alternate team1, team2
 	for( iPlayer = 0; iPlayer < playerArray.length; iPlayer++)
 	{
-		if( playerArray[i].teamNum != (iPlayer + 1)%2 )
+		if( playerArray[i].teamNum != (iPlayer + 1)%(playerArray.length/2) )
 		{
-			//Return to lobby
+			//Return to lobby... or write code to check that there are 2 on each team, then rearrange so in right positions
 		}
 	}
 	
 	
-	//Loop that controls rounds
+	//*********************Loop that controls rounds, one round is 6 tricks
 	
 	for( gameLoop=0; gameLoop<200; gameLoop++)
 	{
@@ -49,477 +122,623 @@ function config_Pitch4( playerArray )
 		pitch4Deck.shuffleDeck();
 		
 		//Dealing cards
-		for( iDeal = 0; iDeal < 6 * playerArray.length; iDeal++)
+		for( iDeal = 0; iDeal < CARDS_DEALT * playerArray.length; iDeal++)
 		{
 			//Takeing card from top of deck, putting in players hand, starting with perons left of dealer
-			playerArray[(currentDealer + 1 + iDeal)%playerArray.length].receiveCardHand( pitch4Deck.takeTopCard() );
+			playerArray[(iCurrentDealer + 1 + iDeal)%playerArray.length].receiveCardHand( pitch4Deck.takeTopCard() );
 		}
 		
 		//Sorting everyone's hand for them
 		for( iPlayer = 0; iPlayer < playerArray.length; iPlayer++)	
 		{
-			playerArray[i].sortHand();
+			playerArray[i].sortHand();  //This function doesn't currently do anything.
 		}
 		
+		// ***GAME STATE UPDATE***
 		//NEED TO START PRINTING EVERYONE'S HAND HERE!!!
 		
-		//Bidding
-		for( iBid = 0; iBid < playerArray.length; iBid++)
+		// False case is 0, someone had a pitch hand
+		if ( no_pitch_hands( playerArray ) == 0 )
 		{
-			// Need special bidding screen printed for all players, has whose turn it is to bid
-			//if( playerArray[ (currentDealer + 1 + iBid) % 4 ].servUserID == ???.servUserID )
-			//{
-				// Call screen that can print pass, 1, 2, 3, 4, Shoot if it their turn to bid
-				
-			//}
-			// record bid in 
-			//bids[(currentDealer + 1 + iBid) % 4] = button result
-			//update the allowed bids, if iBid > 1 then the 1 bid is no longer allowed
-			//If iBid gets to playerArray.length - 1 and no one has bid 2 or higher, allowed bid for 0 disappears			
+			// ANNOUCEMENT THAT SOMEONE HAD A PITCH HAND
+			// SHOW EVERYONES CARDS
+			// ***GAME STATE UPDATE***
+			// HAVE EVERYONE CLICK BUTTON FOR REDEAL
 		}
+		else
+		{
+			//This is the case for no pitch hands... rest of round begins.
+		
+			//Bidding
+			for( iBid = 0; iBid < playerArray.length; iBid++)
+			{
+				// ***GAME STATE UPDATE***
+				// Need special bidding screen printed for all players, has whose turn it is to bid
+				//if( playerArray[ (iCurrentDealer + 1 + iBid) % playerArray.length ].servUserID == ???.servUserID )
+				//{
+					// Call screen that can print pass, 1, 2, 3, 4, Shoot if it their turn to bid
+					
+				//}
+				// record bid in 
+				//bids[(iCurrentDealer + 1 + iBid) % playerArray.length] = button result
+				if ( bids[iBid] == 0 )
+				{
+					//Do nothing
+				}	
+				else if ( bids[iBid] == 1 )
+				{
+					// Also do nothing, but will display
+				}
+				else if ( bids[iBid] == 2 )
+				{
+					//Setting the bidAllowed at index 2 (which corresponds to a bid of 2) to false
+					bidsAllowed[2] = 0;
+				}
+				else if ( bids[iBid] == 3 )
+				{
+					//Setting the bidAllowed at index 2 (which corresponds to a bid of 2) to false
+					bidsAllowed[2] = 0;
+					bidsAllowed[3] = 0;
+				}
+				else if ( bids[iBid] == 4 )
+				{
+					bidsAllowed[2] = 0;
+					bidsAllowed[3] = 0;
+					bidsAllowed[4] = 0;
+				}
+				else if (bids[iBid] == 11 )
+				{
+					bidsAllowed[2] = 0;
+					bidsAllowed[3] = 0;
+					bidsAllowed[4] = 0;
+					bidsAllowed[5] = 0; //Index 5 has whether a shoot is allowed
+				}
+			
+				// If you aren't the first person on your team to bid, you can't bid 1 any more
+				// Is greater than 0 because if iBid = 1, the index=1 player has already bid and the allowed bids for the index=2
+				//     player needs to be set
+				if( iBid > 0 )
+				{
+					bidsAllowed[1] = 0;
+				}
+			
+				//If iBid gets to playerArray.length - 2 (ie at the end of the 2nd to last player to bid) AND no one has bid 2 or higher, allowed bid for 0 disappears
+				if( iBid == playerArray.length - 2 && bidsAllowed[2] == 1 )
+				{
+					bidsAllowed[0] = 0;
+				}
+			
+			}
 
+			//determining who won the bidding
+			for( iBid = 0; iBid < playerArray.length; iBid++ )
+			{
+				if( bids[iBid] > tempMaxBid )
+				{
+					tempMaxBid = bids[iBid];
+					iMaxBidPlayer = iBid;				
+				}
+			}
+		
+			// For initial setup, whoever took the bid leads the first round
+			iPlayerToLead = iMaxBidPlayer;
+			// ***GAME STATE UPDATE***
+		
+			// ROUND LOOP, controls all tricks
+			for( iTrickNum = 0; iTrickNum < CARDS_DEALT; iTrickNum++ )
+			{
+				// Collecteds the cards for each trick
+				for( iTrickCard = 0; iTrickCard < playerArray.length; iTrickCard++)
+				{
+					// Setting legal play to 0, has to play a legal card to be able to exit this while loop
+					legalPlay = 0;
+					// WHILE LOOP TO GET VALID CARD TO PLAY
+					while( legalPlay == 0)
+					{
+						//Getting card from whoever's turn it is, index of current player is "(iPlayerToLead+iTrickCard)%playerArray.length"
+						// Gets feedback from buttons about which card is attempted to be played
+						// The button clicked needs to return the INDEX of the card being attempted to play, iCardButtonClicked
+						// tempCard = playerArray[(iPlayerToLead+iTrickCard)%playerArray.length].myHand.cardArray[iCardButtonClicked];
+						// need to split equals up into .suit and .rank for copying
+			
+						if( firstRoundCardPlayed == 1 )
+						{
+							//Assigning trump suit
+							trumpSuit = tempCard.suit;
+							// ***GAME STATE UPDATE***
+							
+							//Default is first card played is both high and low, will sort through all cards to find out
+							highCard.suit = tempCard.suit;
+							highCard.rank = tempCard.rank;
+							iHighCardOwner = iMaxBidPlayer;
+							lowCard.suit = tempCard.suit;
+							lowCard.rank = tempCard.rank;
+							iLowCardOwner = iMaxBidPlayer;
 
-		//winner of bidding FIRST PLAYER PLAYS, SETS TRUMP
+							// for loops checks all hands of all players for which cards are high and low, 
+							//      and recording WHO has them (otherwise info lost at end of round)
+							for( iPlayer = 0; iPlayer < playerArray.length; iPlayer++)
+							{
+								for( iPlayerCard = 0; iPlayerCard < playerArray[iPlayer].myHand.cardArray.length; iPlayerCard++ )
+								{
+									//Checking to see if a player's card is higher than the previous high card, if so, setting that as the new high card
+									if( playerArray[iPlayer].myHand.cardArray[iPlayerCard].suit == trumpSuit && playerArray[iPlayer].myHand.cardArray[iPlayerCard].rank > highCard.rank )
+									{
+										highCard.rank = playerArray[iPlayer].myHand.cardArray[iPlayerCard].rank;
+										iHighCardOwner = iPlayer;										
+									}
+									
+									//Checking to see if a player's card is lower than the previous low card, if so, setting that as the new low card
+									if( playerArray[iPlayer].myHand.cardArray[iPlayerCard].suit == trumpSuit && playerArray[iPlayer].myHand.cardArray[iPlayerCard].rank < lowCard.rank )
+									{
+										lowCard.rank = playerArray[iPlayer].myHand.cardArray[iPlayerCard].rank;
+										iLowCardOwner = iPlayer;	
+									}
+								}
+							}
+				
+							//Turning off first card played so these events are trigged again this round
+							firstRoundCardPlayed = 0;
+						}
+						
+						//If first card played in trick, setting that suit as lead suit, and it is automatically legal
+						
+						if( iTrickCard == 0 )
+						{
+							leadSuit = tempCard.suit;
+							legalPlay = 1;
+						}			
+						//Takes trump and lead suits and card attemped along with player hand to determine if legal play
+						else if ( legalPitchCardPlay( trumpSuit, leadSuit, tempCard, playerArray[(iPlayerToLead+iTrickCard)%playerArray.length].myHand ) == 1 )
+						{
+							legalPlay = 1;
+						}
+						else
+						{
+							// It is not a legal play and the player needs to be informed of this... will go back through loop waiting for button press
+						}	
+					}
+					
+					//Line that actually removes card from player's hand and puts it in the middle pile
+					pitchTrickDeck.addCards( playerArray[(iPlayerToLead+iTrickCard)%playerArray.length].playCardHand( iCardButtonClicked ) );
+					// ***GAME STATE UPDATE***
+					
+					//Updating the instant point tracker if the 2 of trump is played
+					if( tempCard.suit == trumpSuit && tempCard.rank == 2)
+					{
+						//The -1 is for converting from team number to index of point tracking for that team
+						instantPointTracker[ (playerArray[iLowCardOwner].teamNum - 1) ] = instantPointTracker[ (playerArray[iLowCardOwner].teamNum - 1) ] + 1;
+					}
+					//Updating the instant point tracker if the Ace of trump is played
+					if( tempCard.suit == trumpSuit && tempCard.rank == 14 )
+					{
+						instantPointTracker[ (playerArray[iHighCardOwner].teamNum - 1) ] = instantPointTracker[ (playerArray[iHighCardOwner].teamNum - 1) ] + 1;
+					}
+					
+					//Checking if a non-bidding team just won with instant points
+					if( playerArray[iMaxBidPlayer].teamNum != playerArray[(iPlayerToLead+iTrickCard)%playerArray.length].teamNum )
+					{
+						if( score[ playerArray[(iPlayerToLead+iTrickCard)%playerArray.length].teamNum - 1 ] + instantPointTracker[ playerArray[(iPlayerToLead+iTrickCard)%playerArray.length].teamNum - 1 ] >= 11 )
+						{
+							//The team "playerArray[(iPlayerToLead+iTrickCard)%playerArray.length].teamNum" 
+							//just won the game by instant points in the middle of a trick
+							//Update scores and exit to lobby
+							// ***GAME STATE UPDATE***
+						}
+					}
+					
+					//Checking if a bidding team just won with instant points
+					if( playerArray[iMaxBidPlayer].teamNum == playerArray[(iPlayerToLead+iTrickCard)%playerArray.length].teamNum )
+					{
+						if( instantPointTracker[ playerArray[(iPlayerToLead+iTrickCard)%playerArray.length].teamNum - 1 ] >= bids[iMaxBidPlayer] )
+						{
+							if( score[ playerArray[(iPlayerToLead+iTrickCard)%playerArray.length].teamNum - 1 ] + instantPointTracker[ playerArray[(iPlayerToLead+iTrickCard)%playerArray.length].teamNum - 1 ] >= 11 )
+							{
+								//The team "playerArray[(iPlayerToLead+iTrickCard)%playerArray.length].teamNum" 
+								//just won the game by instant points in the middle of a trick
+								//Update scores and exit to lobby
+								// ***GAME STATE UPDATE***
+							}
+						}
+					}		
+				}
+				
+				//Determine which player took the trick
+				iPlayerWonTrick = (iPlayerToLead + indexWinTrick( pitchTrickDeck, trumpSuit ) )%playerArray.length;
+				
+				// Update instant points with jack
+				for( iPitchTrickDeck = 0; iPitchTrickDeck <  pitchTrickDeck.cardArray.length; iPitchTrickDeck++ )
+				{
+					if( pitchTrickDeck.cardArray[iPitchTrickDeck].suit == trumpSuit && pitchTrickDeck.cardArray[iPitchTrickDeck].rank == 11 )
+					{
+						//Someone took the Jack, update instant points, record who won it
+						instantPointTracker[ (playerArray[iPlayerWonTrick].teamNum - 1) ] = instantPointTracker[ (playerArray[iPlayerWonTrick].teamNum - 1) ] + 1;
+						jackThisRound = 1; // 1 for true, 0 for false
+						iPlayerWonJack = iPlayerWonTrick;
+					}
+				}
+				
+				//Checking if a non-bidding team just won with instant points from jack
+				if( playerArray[iMaxBidPlayer].teamNum != playerArray[iPlayerWonTrick].teamNum )
+				{
+					if( score[ playerArray[iPlayerWonTrick].teamNum - 1 ] + instantPointTracker[ playerArray[iPlayerWonTrick].teamNum - 1 ] >= 11 )
+					{
+						//The team "playerArray[iPlayerWonTrick].teamNum" 
+						//just won the game by instant points by taking the jack in a trick
+						//Update scores and exit to lobby
+						// ***GAME STATE UPDATE***
+					}
+				}
+				//Checking if a bidding team just won with instant points from jack
+				if( playerArray[iMaxBidPlayer].teamNum == playerArray[iPlayerWonTrick].teamNum )
+				{
+					if( instantPointTracker[ playerArray[iPlayerWonTrick].teamNum - 1 ] >= bids[iMaxBidPlayer] )
+					{
+						if( score[ playerArray[iPlayerWonTrick].teamNum - 1 ] + instantPointTracker[ playerArray[iPlayerWonTrick].teamNum - 1 ] >= 11 )
+						{
+							//The team "playerArray[iPlayerWonTrick].teamNum" 
+							//just won the game by instant points by taking the jack
+							//Update scores and exit to lobby
+							// ***GAME STATE UPDATE***
+						}
+					}
+				}	
+				
+				//Adding the cards from the won trick to the player who won them, while at the same time emptying the trick pile
+				playerArray[iPlayerWonTrick].receiveCardWin( pitchTrickDeck.cardArray.splice(0,pitchTrickDeck.cardArray.length) );
+				// ***GAME STATE UPDATE*** (no cards in middle any more)
+				
+			}
+			
+			//********* Use tempScore[] to count this round's game points
+			// High card point
+			tempScore[ playerArray[iHighCardOwner].teamNum - 1] = tempScore[ playerArray[iHighCardOwner].teamNum - 1 ] + 1;
+			//Low card point
+			tempScore[ playerArray[iLowCardOwner].teamNum - 1] = tempScore[ playerArray[iLowCardOwner].teamNum - 1 ] + 1;
+			iLowCardOwner
+			//If there was a jack, jack points
+			if( jackThisRound == 1 )
+			{
+				tempScore[ playerArray[iPlayerWonJack].teamNum - 1] = tempScore[ playerArray[iPlayerWonJack].teamNum - 1 ] + 1;
+			}	
 		
-		//GAME DETERMINES WHICH CARDS ARE HIGH AND LOW, will record who has those (but not update score if not garenteed)
+			// Card Points
+			iTeamWonCardPoints = indexTeamCardPoints( playerArray );
+			//Condition for tie and no points awarded
+			if( iTeamWonCardPoints == playerArray.length )
+			{
+				//Do nothing, this is condition for tie of card points
+			}
+			else
+			{
+				tempScore[iTeamWonCardPoints] = tempScore[iTeamWonCardPoints] + 1;
+			}
+			
+			//Loop to give all teams the points they won that round, determines if bidding team made bid and gives points appropriately
+			for( iTeamNum = 0; iTeamNum < score.length; iTeamNum++)
+			{
+				// The + 1 is to change from index to teamNum, checking if team is bidding team
+				if( iTeamNum + 1 == playerArray[iMaxBidPlayer].teamNum )
+				{
+					//Handling shooting case
+					if( bids[iMaxBidPlayer] == 11 )
+					{
+						if( tempScore[iTeamNum] == 4 )
+						{
+							score[iTeamNum] = score[iTeamNum] + 11;
+						}
+					}
+					//Other cases
+					else if( tempScore[iTeamNum] >= bids[iMaxBidPlayer] )
+					{
+						score[iTeamNum] = score[iTeamNum] + tempScore[iTeamNum];
+					}
+					else
+					{
+						score[iTeamNum] = score[iTeamNum] - bids[iMaxBidPlayer];
+					}
+				}
+				//All other teams just get however many points they got that round
+				else
+				{
+					score[iTeamNum] = score[iTeamNum] + tempScore[iTeamNum];
+				}
+			}
+
+			// ***GAME STATE UPDATE***
+			
+			// Check to see if any teams won with the game points
+			for( iTeamNum = 0; iTeamNum < score.length; iTeamNum++)
+			{
+				if( score[iTeamNum] >= 11)
+				{
+					//VICTORY CONDITION, RETURN TO LOBBY!!!
+				}
+			}
+			
+			
+			
+			//If another round increase the index of hte current dealer (mod playerArray.length) so ready for the next round... this needs
+			//    to NOT advance if there is a pitch hand, so needs to be inside pitchHand if...else
+			iCurrentDealer = (iCurrentDealer + 1)%playerArray.length;		
+		}
+		//END OF SECTION FOR NO PITCH HAND
 		
-		//COUNT INSTANT POINTS IN EACH ROUND, IE ACE trump, 2 trump, and taking JAck of trump, otherwise,
-		//ALL instant points trigger chekcing score, and if your team has bid, and if your team has made bid
 		
-		//COUNT ALL GAME POINTS
-		//CHECK TO SEE IF ALL INSTANT POINTS WERE AWARDED, ie still high and low to give out, 
+		//*********************RESETTING round variables!
 		
-		//UPDATE FINAL SCORE OF ROUND
+		//Replace all bids with default bid of -1;
+		for( iBid = 0; iBid < playerArray.length; iBid++ )
+		{
+			bids[iBid] = -1;
+		}
 		
-		//CHECK SCORE TO SEE IF CONTINUE
+		//Resets all allowed bids to true (1), remember bidsAllowed[] corresponds to numbers [0,1,2,3,4,11]
+		for( iBidAllowedReset = 0; iBidAllowedReset < bidsAllowed.length; iBidAllowedReset++)
+		{
+			bidsAllowed[i] = 1;
+		}
 		
-		//If another round increase the index of hte current dealer (mod 4) so ready for the next round
-		//Clear all bids with bids.splice(0,bids.length);
-		//Clear all allowed bids with bidsAllowed.splice(0,bidsAllowed.length);
-		// Reset all bids to true, use 0 as false, 1 as true 
+		//Reset max bid to 0
+		tempMaxBid = 0;
+		//Reset first card played to 1
+		firstRoundCardPlayed = 1;
+		//Reset jackThisRound to false = 0
+		jackThisRound = 0;
+		
+		//Resetting the array that keeps track of instand points for the teams
+		for( iNumTeam = 0; iNumTeam < playerArray.length/2; iNumTeam++)
+		{
+			instantPointTracker[iNumTeam] = 0;
+		}
+		
+		//Resetting the array that keeps track of the tempScore
+		for( iNumTeam = 0; iNumTeam < playerArray.length/2; iNumTeam++)
+		{
+			tempScore[iNumTeam] = 0;
+		}
+		
+		//Resetting the array that keeps track of the cardPoints
+		for( iNumTeam = 0; iNumTeam < playerArray.length/2; iNumTeam++)
+		{
+			cardPoints[iNumTeam] = 0;
+		}
+		
+		// ***GAME STATE UPDATE***
+		
+		//Resetting the highestCardPoints value
+		highestCardPoints = 0;
 		
 		if( gameLoop == 200 )
 		{
 			// Game loop reached maximum number of rounds, draw, returning to lobby
 		}
 	}
+		
 	
-	
-//function Card(s, r)
-//{
-//	this.suit = s;
-//	this.rank = r;
-//}
-	
-// Member variables for deck are:
-//      cardArray[] (array of Card)
-// Member functions for deck are:
-//      fillDeck()--Erases previous deck state and fills with 52 cards in order
-//      fillDeck( totalSuit, totalRank)--Allows you to fill deck with custom numbers of suit and rank
-//      shuffleDeck()--Shuffles whatever cards are currently in the deck
-//      takeTopCard()--Returns the top card in the deck and removes it from the deck
-//      addCards()--Adds card top of deck, if array of cards will add all cards
-//      takeIndexCard( cardIndex )--Removes a card at the index given	
-	
-// Member variables for Player Class
-//	    teamNum--Which team number this player is on
-//      ID--User name of the person
-//   	screenName--Screen name in case we want to have user name and visible name seperate
-//      myHand --The cards in the player's hand
-//      myCardsWon = new Deck()--The cards from the tricks the player has won
-//      myPiles = new Deck()-- In particular games a player might need more piles of cards, this is an array of decks
-// Member functions for Player Class
-//      receiveCardHand( cardToAdd ) 
-//      receiveCardWin( cardToAdd )
-//      playCardHand( handCardIndex)
-//      emptyAllDecks()
-//      sortHand()
-	
-	
-	function Player(teamNumber, userID, alias)
+}
+
+
+//Will check to see if any of the players in the array has a pitch hand
+//If no one has a pitch hand, will return 1
+//If someone has a pitch hand, will return 0
+function no_pitch_hands( playerArray )
 {
-	this.teamNum = teamNumber;
-	this.servUserID = userID;
+	// 0 is false, 1 is true
+	var hasNonPitchCard = 0;
 	
-	if ( alias === undefined)
+	for( iPlayer = 0; iPlayer < playerArray.length; iPlayer++)
 	{
-		this.screenName = userID;
+		hasNonPitchCard = 0;
+		
+		for( iPlayerCard = 0; iPlayerCard < playerArray[iPlayer].myHand.cardArray.length; iPlayerCard++ )
+		{
+			//Case 1 of non pitch card, has a 2 of any suit
+			if( playerArray[iPlayer].myHand.cardArray[iPlayerCard].rank == 2 )
+			{
+				hasNonPitchCard = 1;
+			}
+			//Case 2 of non pitch card, has a 10 or above
+			if( playerArray[iPlayer].myHand.cardArray[iPlayerCard].rank > 9 )
+			{
+				hasNonPitchCard = 1;
+			}
+			
+		}
+		
+		if( hasNonPitchCard == 0 )
+		{
+			//If this is still 0, someone has a pitch hand, returns 0 (false)
+			return 0;
+		}	
+	
+		
+		
+	}
+	
+	// To make it here, no one had a pitch hand, so this function returns true=1
+	return 1;
+	
+}
+
+//Recieves a trumpSuit, leadSuit, tempCard=cardAttempted, and a Deck (that is the player's hand)
+// Returns 1 if the tempCard is a legal play, 0 if the tempCard is not a legal play
+function legalPitchCardPlay( trumpSuit, leadSuit, tempCard, playerHandDeck )
+{
+	var numLeadSuit = 0;
+	
+	//The two easy cases.
+	if ( tempCard.suit == trumpSuit || tempCard.suit == leadSuit )
+	{
+		return 1;
+	}
+	
+	//Loop to check to see if player has any of the leadSuit
+	//At this point we know tempCard is not trump or leadSuit, so if he has the leadSuit, this is an illegal play
+	for( iPlayerHand = 0; iPlayerHand < playerHandDeck.cardArray.length; iPlayerHand++ )
+	{
+		if( playerHandDeck.cardArray[iPlayerHand].suit == leadSuit )
+		{
+			numLeadSuit++;
+		}
+	}
+
+	if( numLeadSuit == 0 )
+	{
+		//If there are no other lead suits, this is legal
+		return 1;
 	}
 	else
 	{
-	this.nickname = alias;
+		//If there is another leadSuit, this is an illegal play
+		return 0;
 	}
-	
-	this.myHand = new Deck();
-	this.myCardsWon = new Deck();
-	this.myPiles = [];
-}
-	
-	
-	
-	
 }
 
-
-
-
-// The two variables passed in are going to come from the server setting up the lobby.
-function GameConfig( gameTypeID, playerArray)
+//Receives the current cards in middle and determines the index of the card that won the trick
+function indexWinTrick( pitchTrickDeck, trumpSuit )
 {
-	this.gameType = gameTypeID;
-	this.players = playerArray;
+	var highestIndex = 0;
+	var highestCard = new Card( pitchTrickDeck.cardArray[0].suit, pitchTrickDeck.cardArray[0].rank ); //Initial highest card is first in array
+	var leadSuit = pitchTrickDeck.cardArray[0].suit; //Lead suit is suit of first card in array
 	
-
-	
-	// Start of loop that actually runs game. This will call a function in the CONFIG file, 
-	// This function will need ot have a part that does setting up round, checking moves are legal, check game win, and after
-	// The game return the winners to the GameConfig.
-	
-	
-	this.myHand = new Deck();
-	this.myCardsWon = new Deck();
-	this.myPiles = [];
-}
-
-
-
-// The Game Function will have 4 main parts:
-// 1) set up number of players, number of cards in deck,
-// 2) See if a new round should start based on win conditions and set up that round 
-//     (shuffle, deal, bidding, cardplay)
-// 3) Check that all moves are legal during the round (trump, following suit)
-//      3a) Check that the game isn't instantly won after a trick, ie team with 10 gets a 2 of trump played
-// 4) Tablulate and update scores at the end of the round
-
-
-
-
-
-
-////// Start Card class //////
-
-// Member variables for Card class:
-//      suit 
-//      rank
-// possible suits are c=clubs, s=spades, d=diamonds, h=hearts
-// possible ranks are 2 through 14, where 11 = Jack, 12=Queen, 13=King, 14=Ace
-
-function Card(s, r)
-{
-	this.suit = s;
-	this.rank = r;
-}
-
-////// End Card class //////
-
-////// Start Deck class //////
-// A deck is an array of cards.
-// The default constructor makes a deck with 52 cards
-// There is also a constructor to make an empty deck
-// Member variables for deck are:
-//      cardArray[] (array of Card)
-// Member functions for deck are:
-//      fillDeck()--Erases previous deck state and fills with 52 cards in order
-//      fillDeck( totalSuit, totalRank)--Allows you to fill deck with custom numbers of suit and rank
-//      shuffleDeck()--Shuffles whatever cards are currently in the deck
-//      takeTopCard()--Returns the top card in the deck and removes it from the deck
-//      addCards()--Adds card top of deck, if array of cards will add all cards
-//      takeIndexCard( cardIndex )--Removes a card at the index given
-
-//Default constuctor: Makes an empty deck of cards
-function Deck()
-{
-	this.cardArray = [];
-}
-
-// fillDeck()
-// Erases all cards in deck and fill with 4 suits and 2 through 14 (aka 2 through Ace)
-Deck.prototype.fillDeck = function fillDeck()
-{
-	//Emptying the deck
-	this.cardArray.splice(0,this.cardArray.length);
-	// Array for suit characters
-	// Default 0 = c    1 = s    2 = h    3 = d
-	var suitArray = [c, s, h, d];
-	var minRank = 2; //Minimum card is a 2
-	var maxRank = 14; //Max rank is Ace = 14
-
-	//First For loop: cycles through the suits	
-	//Second For loop: cycles through the ranks
-	for (fillSuits=0; fillSuits < 3; fillSuits++)
+	//For loop to go through all cards in pitchTrickDeck (the deck in the middle of the table)
+	for( iPitchTrickDeck = 0; iPitchTrickDeck < pitchTrickDeck.cardArray.length; iPitchTrickDeck++)
 	{
-		for (fillRanks=minRank; fillRanks < maxRank + 1; fillRanks++)
+		//Cases for trump being lead
+		if (leadSuit == trumpSuit )
 		{
-			this.cardArray.add(new Card(suitArray[fillSuits], fillRanks));
+			if( pitchTrickDeck.cardArray[iPitchTrickDeck].suit==trumpSuit && pitchTrickDeck.cardArray[iPitchTrickDeck].rank > highestCard.rank  )
+			{
+				highestIndex = iPitchTrickDeck;
+				highestCard = pitchTrickDeck.cardArray[iPitchTrickDeck];
+			}
+		}
+		//Cases for trump not lead, and someone played trump
+		else if( pitchTrickDeck.cardArray[iPitchTrickDeck].suit == trumpSuit )
+		{
+			if( highestCard.suit != trumpSuit )
+			{
+				highestIndex = iPitchTrickDeck; 
+				highestCard = pitchTrickDeck.cardArray[iPitchTrickDeck];
+			}
+			//Here we know the current card is trump, the highest card is trump, so we need to see if we should replace based on rank 
+			else if ( highestCard.rank < pitchTrickDeck.cardArray[iPitchTrickDeck].rank )
+			{
+				highestIndex = iPitchTrickDeck; 
+				highestCard = pitchTrickDeck.cardArray[iPitchTrickDeck];
+			}
+		}
+		// Cases for no trump involved
+		else if( pitchTrickDeck.cardArray[iPitchTrickDeck].suit == leadSuit && highestCard.rank < pitchTrickDeck.cardArray[iPitchTrickDeck].rank   )
+		{
+				highestIndex = iPitchTrickDeck; 
+				highestCard = pitchTrickDeck.cardArray[iPitchTrickDeck];
 		}
 	}
-};
+	
+	return highestIndex;
+	
+}
 
-// fillDeck( totalSuit, totalRank)
-// Default is 4 suits and 2 through 14 (aka 2 through Ace)
-// If more than 4 suits: 5 = cc, 6 = ss, 7 = dd, 8 = hh, 9 = ccc, 10 = sss, etc.
 //
-Deck.prototype.fillDeck = function fillDeck(totalSuit, totalRank)
-{
-	//Emptying the deck
-	this.cardArray.splice(0,this.cardArray.length);
-	
-	// Array for suit characters
-	var suitArray = [c, s, h, d];
+ function indexTeamCardPoints( playerArray )
+ {
+	 //Temporary counter for team card points
+	 var tempTeamCardPoints = [];
+	 var indexCurrentTeamMax = 0;
+	 var isTie = 0; // 0 for false, 1 for true
+	 
+	 // Initializing array based on number of players
+	 for( iPlayerArray = 0; iPlayerArray < playerArray.length/2; iPlayerArray++)
+	 {
+		 tempTeamCardPoints.push(0);
+	 }
+	 
+	 //Adding all points players have to their team's card points
+	 for( iPlayerArray = 0; iPlayerArray < playerArray.length; iPlayerArray++)
+	 {
+		 for( iCardsWon = 0 ; iCardsWon < playerArray[iPlayerArray].myCardsWon.cardArray.length; iCardsWon++ )
+		 {
+			 //Ten
+			 if( playerArray[iPlayerArray].myCardsWon.cardArray[iCardsWon].rank == 10 )
+			 {
+				 tempTeamCardPoints[playerArray[iPlayerArray].teamNum - 1] = tempTeamCardPoints[playerArray[iPlayerArray].teamNum - 1] + 10;
+			 }
+			 //Jack
+			 if( playerArray[iPlayerArray].myCardsWon.cardArray[iCardsWon].rank == 11 )
+			 {
+				 tempTeamCardPoints[playerArray[iPlayerArray].teamNum - 1] = tempTeamCardPoints[playerArray[iPlayerArray].teamNum - 1] + 1;
+			 }
+			 //Queen
+			 if( playerArray[iPlayerArray].myCardsWon.cardArray[iCardsWon].rank == 12 )
+			 {
+				 tempTeamCardPoints[playerArray[iPlayerArray].teamNum - 1] = tempTeamCardPoints[playerArray[iPlayerArray].teamNum - 1] + 2;
+			 }
+			 //King
+			 if( playerArray[iPlayerArray].myCardsWon.cardArray[iCardsWon].rank == 13 )
+			 {
+				 tempTeamCardPoints[playerArray[iPlayerArray].teamNum - 1] = tempTeamCardPoints[playerArray[iPlayerArray].teamNum - 1] + 3;
+			 }
+			 //Ace
+			 if( playerArray[iPlayerArray].myCardsWon.cardArray[iCardsWon].rank == 14 )
+			 {
+				 tempTeamCardPoints[playerArray[iPlayerArray].teamNum - 1] = tempTeamCardPoints[playerArray[iPlayerArray].teamNum - 1] + 4;
+			 }			 
+		 }
+	 }
+	 
+	 //Setting values for first team as initial max values
+	 indexCurrentTeamMax = 0;
 
-	var suitTemp; //Used to make suits with more than 1 character, ie if more than 4 suits
-
-	//First For loop: cycles through the suits	
-	//Second For loop: populates the "tempSuit" with the correct number and type of characters
-	// The max number for charCount is basically an integer division, but I didn't know if .js had it
-	//Third For loop: cycles through the ranks
-	for (fillSuits=0; fillSuits < totalSuit; fillSuits++)
-	{
-		suitTemp=""; //Setting string to null each loop so can add correct chars for suit
-		for (charCount=0; charCount < (totalSuit- 1 - (totalSuit-1)%4)/4 + 1; charCount++)
-		{
-			suitTemp = suitTemp + suitArray[(fillSuits -1)%4];				
-		}
-
-		//For loops to populate ranks
-		for (fillRanks=2; fillRanks < totalRank + 2; fillRanks++)
-		{
-			this.cardArray.add(new Card( suitTemp, fillRanks));
-		}
-	}
-};
-
-// shuffleDeck()
-// The shuffleDeck() function will shuffle the deck with however many cards it currently has in it
-// The shuffle goes through each position in the deck and exchanges it with a the random at a
-//      random position in the deck.
-Deck.prototype.shuffleDeck = function shuffleDeck()
-{
-	// Makes a temp card so you can swap
-	var tempCard = new Card (0,0);
-	// The randomly selected card in the deck that the current card will switch with
-	var cardToSwitchWith;
-
-	for (shuffleThisCard = 0; shuffleThisCard < this.cardArray.length; shuffleThisCard++)
-	{
-		//Giving random number between 1 and number of cards in deck
-		cardToSwitchWith = Math.floor((Math.random() * this.cardArray.length) + 1);
-		// Next 3 lines are swap
-		tempCard = this.cardArray[shuffleThisCard];
-		this.cardArray[shuffleThisCard] = this.cardArray[cardToSwitchWith - 1]; // The -1 switches from # to index
-		this.cardArray[cardToSwitchWith - 1] = this.cardArray[shuffleThisCard];		
-	}
-};
-
-// takeTopCard() 
-// This removes the top card (last in array) from the deck
-Deck.prototype.takeTopCard = function takeTopCard()
-{
-	return this.cardArray.pop();
-};
-
-// addCards( cardToAdd) 
-// This adds a card(s) to the top of the deck (adds to last in array)
-// NOTE: Will work if either single card or array of cards is added
-Deck.prototype.addCards = function addCards( cardsToAdd )
-{
-	this.cardArray.concat( cardsToAdd );
-};
-
-// takeIndexCard( cardIndex ) 
-// This removes a card at a particular index and returns it
-Deck.prototype.takeIndexCard = function takeIndexCard( deckCardIndex )
-{
-	return this.cardArray.splice(cardIndex, 1);
-};
-
-////// End Deck class //////
-
-
-
-////// Start Player class //////
-
-// A player is an object that can receive cards and play cards from their hand (Deck). The board is 
-// printed based on what the player can see
-// Member variables for Player Class
-//	    teamNum--Which team number this player is on
-//      ID--User name of the person
-//   	screenName--Screen name in case we want to have user name and visible name seperate
-//      myHand --The cards in the player's hand
-//      myCardsWon = new Deck()--The cards from the tricks the player has won
-//      myPiles = new Deck()-- In particular games a player might need more piles of cards, this is an array of decks
-// Member functions for Player Class
-//      receiveCardHand( cardToAdd ) 
-//      receiveCardWin( cardToAdd )
-//      playCardHand( handCardIndex)
-//      emptyAllDecks()
-//      sortHand()
-
-//Default constuctor: Makes a player with an empty deck of cards
-function Player(teamNumber, userID, alias)
-{
-	this.teamNum = teamNumber;
-	this.servUserID = userID;
-	
-	if ( alias === undefined)
-	{
-		this.screenName = userID;
-	}
-	else
-	{
-	this.nickname = alias;
-	}
-	
-	this.myHand = new Deck();
-	this.myCardsWon = new Deck();
-	this.myPiles = [];
-}
-
-// receiveCardHand( cardToAdd )
-// Function used to give a player a card or set of cards (this function will accept arrays)
-Player.prototype.receiveCardHand = function receiveCardHand( cardToAdd )
-{
-	this.myHand.addCards( cardToAdd );
-};
-
-// receiveCardWin( cardToAdd )
-// Function used to give a player a card or set of cards (this function will accept arrays)
-Player.prototype.receiveCardWin = function receiveCardWin( cardToAdd )
-{
-	this.myCardsWon.addCards( cardToAdd );
-};
-
-// playCard( handCardIndex )
-// Function used to play a card, will be called by clicking on card button
-// By clicking on the card button the index of the card clicked will be passed to this function
-Player.prototype.playCardHand = function playCardHand( handCardIndex )
-{
-	return this.myHand.takeIndexCard( handCardIndex );
-};
-
-// emptyAllDecks()
-// Function used to get rid of all cards a player has
-Player.prototype.emptyAllDecks = function emptyAllDecks()
-{
-	this.myHand.splice(0,this.myHand.length);
-	this.myCardsWon.splice(0,this.myCardsWon.length);
-	this.myPiles.splice(0,this.myPiles.length);
-};
-
-
-// sortHand()
-// Function used to sort a hand, can be called by button on player screen
-Player.prototype.sortHand = function sortHand()
-{
-	// Code that sorts hand, give deck a function that sorts???
-};
-
-
-
-////// End Player class //////
-
-////// Start Game class //////
-
-// The two variables passed in are going to come from the server setting up the lobby.
-function GameConfig( gameTypeID, playerArray)
-{
-	this.gameType = gameTypeID;
-	this.players = playerArray;
-	
-	// IF playerArray doesn't have the right number of players for the game, return to lobby.
-	// if (this.players.length !=  CHECKING APPROPRIATE CONFIG FILE VARIABLE )
-	// {
-	//  	Returnt to lobby
-	// }
-	
-	// Call function to set up the players. This function will load the CONFIG FILE FUNCTION and run it on each player.
-	// For each player in this.players, it will set up the correct number of piles, and double check
-	// the order based on teams is correct
-	
-	// Start of loop that actually runs game. This will call a function in the CONFIG file, 
-	// This function will need ot have a part that does setting up round, checking moves are legal, check game win, and after
-	// The game return the winners to the GameConfig.
-	
-	
-	
-	this.myHand = new Deck();
-	this.myCardsWon = new Deck();
-	this.myPiles = [];
-}
-
-
-
-// The Game Function will have 4 main parts:
-// 1) set up number of players, number of cards in deck,
-// 2) See if a new round should start based on win conditions and set up that round 
-//     (shuffle, deal, bidding, cardplay)
-// 3) Check that all moves are legal during the round (trump, following suit)
-//      3a) Check that the game isn't instantly won after a trick, ie team with 10 gets a 2 of trump played
-// 4) Tablulate and update scores at the end of the round
+	 
+	 //Loop starts at 2nd team
+	 for( iTeamCardPoints = 1; iTeamCardPoints < tempTeamCardPoints.length; iTeamCardPoints++)
+	 {
+		 if( tempTeamCardPoints[iTeamCardPoints] > tempTeamCardPoints[indexCurrentTeamMax] )
+		 {
+			 indexCurrentTeamMax = iTeamCardPoints;
+			 isTie = 0;
+		 }
+		 else if ( tempTeamCardPoints[iTeamCardPoints] == tempTeamCardPoints[indexCurrentTeamMax] )
+		 {
+			 isTie = 1;
+		 }
+	 }
+	 
+	 if( isTie == 1 )
+	 {
+		 //Null value is full length of playerArray.length
+		 return playerArray.length;
+	 }
+	 else
+	 {
+		 return indexCurrentTeamMax;
+	 }
+ }
 
 
 
 
-////// End Game class //////
 
 
 
 
-function preload() 
-{
-	game.load.spritesheet('button', 'assets/button_sprite_sheet.png', 193, 71);
-	game.load.image('background','assets/starfield.jpg');
-	game.load.spritesheet('cards', 'assets/52playingCardsSpriteSheet72x96.png', 72, 96)
-}
-
-var card_number = 6; // Number of cards on screen, will be buttons
-var button = new Array(); //Array of butons for screen
-var background; // back ground slide
-
-function create() 
-{
-	game.stage.backgroundColor = '#182d3b'; // Hex code color 
-
-	background = game.add.tileSprite(0, 0, 800, 600, 'background');
-
-	// Variables X and Y locations for Your Cards
-
-	var xPixFromCenter;
-	var yPix = 400;
-	var xPix_FirstCard = -325;
-	var xPix_spacing = 100;
-
-	for (i=0; i < card_number; i++)
-	{
-		var xPixFromCenter = xPix_FirstCard + xPix_spacing*i; //spacing is 40 pixels
-
-		//Button constructor, upFrame is left blank, not used
-		button[i] = game.add.button(game.world.centerX + xPixFromCenter, yPix, 'cards', actionOnClick, this, 1, 0, 2);
-		button[i].onInputOver.add(over, this);
-		button[i].onInputOut.add(out, this);
-		button[i].onInputUp.add(up, this);
-	}
-}
 
 
-function up() 
-{
-	console.log('button up', arguments);
-}
 
-function over() 
-{
-	console.log('button over');
-}
 
-function out() 
-{
-	console.log('button out');
-}
 
-function actionOnClick() 
-{
 
-	background.visible =! background.visible;
 
-}
+
+
+
+
+
+
+
+
+
+
+
