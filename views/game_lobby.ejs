@@ -1,24 +1,66 @@
-<html ng-app="sampleApp">
+<!DOCTYPE html>
+<html lang="en">
 	<head>
-		<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
-		<link rel="stylesheet" href="//netdna.bootstrapcdn.com/bootstrap/3.0.2/css/bootstrap.min.css"> <!-- load bootstrap css -->
-		<link rel="stylesheet" href="//netdna.bootstrapcdn.com/font-awesome/4.0.3/css/font-awesome.min.css"> <!-- load fontawesome -->
-		<style>
-body        { padding-top:80px; }
-		</style>
-	</head>
-
-	<body ng-controller="IndexController">
+		<title>Bootstrap Case</title>
+		<meta charset="utf-8">
+		<meta name="viewport" content="width=device-width, initial-scale=1">
+		<script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.0/jquery.min.js"></script>
+		<link rel="stylesheet" href="style/lavish-bootstrap.css"> <!-- load bootstrap css -->
+		<script src="http://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/js/bootstrap.min.js"></script>
 		<script src="/socket.io/socket.io.js"></script>
+		<script src="http://code.jquery.com/jquery-1.11.1.js"></script>
 		<script type='text/javascript'>
-		socket.emit("player_login", ugly.user_name);
+var socket = io();
+function submitform()
+{
+	console.log("form submitted");
+	socket.emit('chat message', $('#m').val());
+	$('#m').val('');
+	return false;
+}
+socket.on('chat message', function(msg){
+	console.log("message recieved");
+	$('#messages').append($('<li>').text(msg));
+	$("#messages").scrollTop($("#messages")[0].scrollHeight);
+});
 		</script>
 		<style>
-body        { padding-top:80px; word-wrap:break-word; }
+* { margin: 0; padding: 0; box-sizing: border-box; }
+form { padding: 3px;  width: 100%; }
+form input { border: 0; padding: 10px; width: 90%; margin-right: .5%; }
+form a { width: 9%; border: none; padding: 10px; }
+#messages { list-style-type: none; margin: 0; padding: 0; height: 150px; overflow: auto }
+#messages li { padding: 5px 10px; }
+#messages li:nth-child(odd) { background: #eee; }
 		</style>
 	</head>
 	<body>
-		HI, this is the game lobby
+
+		<div class="container">
+			<h2>Dynamic Tabs</h2>
+			<ul class="nav nav-tabs">
+				<li class="active"><a data-toggle="tab" href="#rules">Rules</a></li>
+				<!-- <li class="disabled"><a data-toggle="tab" href="#game">Game</a></li> -->
+				<li><a data-toggle="tab" href="#game">Game</a></li>
+				<li style="float:right"><a href="/logout">Quit</a></li>
+			</ul>
+
+			<div class="tab-content">
+				<div id="rules" class="tab-pane fade in active">
+					These are the rules of the current game
+				</div>
+				<div id="game" class="tab-pane fade">
+					<%- include game.ejs %>
+				</div>
+			</div>
+		</div>
+		<div id=chat class="well" style="position: fixed; bottom: 0; width: 100%">
+			<ul id="messages"></ul>
+			<form action="">
+				<input id="m" autocomplete="off" /><a href="javascript: submitform()">Search</a>
+			</form>
+		</div>
 	</body>
+
 </html>
 

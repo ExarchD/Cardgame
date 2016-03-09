@@ -129,6 +129,10 @@ io.sockets.on('connection', function (client) {
 	console.log('\t socket.io:: player ' + client.userid + ' connected');
 
 
+	client.on('chat message', function(msg){
+	console.log('\t socket.io:: ' + msg);
+		io.emit('chat message', msg);
+	});
 	//When this client disconnects, we want to tell the game server
 	//about that as well, so it can remove them from the game they are
 	//in, and make sure the other player knows that they left and so on.
