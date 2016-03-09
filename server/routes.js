@@ -60,6 +60,10 @@ module.exports = function(app, passport, game_configs) {
 	// Generate a uuid for the game, update the game list on the general lobby, redirect to 
 	// game lobby with an id. 
 	app.post('/general_lobby', function(req, res) {
+		console.log(req.body);
+		console.log(req.body);
+		console.log(req.body);
+		console.log(req.body);
 		res.redirect('/game_lobby');
 	});
 

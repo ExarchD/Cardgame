@@ -9,7 +9,7 @@
     */
 
 var
-gameport        = process.env.PORT || 4839,
+gameport        = process.env.PORT || 4004,
 
 		express         = require('express'),
 		UUID            = require('node-uuid'),
@@ -128,9 +128,15 @@ io.sockets.on('connection', function (client) {
 	//Useful to know when someone connects
 	console.log('\t socket.io:: player ' + client.userid + ' connected');
 
+	client.on('new game', function(data) { console.log(data) });
+	// log into room
+	client.on('subscribe', function(data) { client.join(data.room); });
+
+	// log out of room
+	client.on('unsubscribe', function(data) { client.leave(data.room); });
 
 	client.on('chat message', function(msg){
-	console.log('\t socket.io:: ' + msg);
+		console.log('\t socket.io::chat message ' + msg);
 		io.emit('chat message', msg);
 	});
 	//When this client disconnects, we want to tell the game server

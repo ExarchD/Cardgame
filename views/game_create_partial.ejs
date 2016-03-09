@@ -1,12 +1,12 @@
 <div class="col-sm-6">
 	<div  class="well">
-		<form id=myForm action="http://127.0.0.1:4839/general_lobby" method="post">
+		<form id=myForm action="/general_lobby" method="post">
 			<br>
 			Available games:
 			<select style="float:right", name="type">
 				<% var ugly2=games%>
 				<% for (i=0; i < ugly2.length; i++) { %>
-				<option value="i"><%=ugly2[i].game+"("+ugly2[i].players+" player)"%></option>    
+				<option value="<%= i %>"><%=ugly2[i].game+"("+ugly2[i].players+" player)"%></option>    
 				<%}%>
 			</select>
 			</br>
