@@ -7,10 +7,17 @@
 		<script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.0/jquery.min.js"></script>
 		<link rel="stylesheet" href="style/lavish-bootstrap.css"> <!-- load bootstrap css -->
 		<script src="http://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/js/bootstrap.min.js"></script>
-		<script src="/socket.io/socket.io.js"></script>
+		<script src="https://cdn.socket.io/socket.io-1.4.5.js"></script>
 		<script src="http://code.jquery.com/jquery-1.11.1.js"></script>
 		<script type='text/javascript'>
 var socket = io();
+socket.emit("subscribe", { room: "gameroom" });
+$(function(){
+	$('form').submit(function(){
+		submitform();
+		return false;
+	});
+});
 function submitform()
 {
 	console.log("form submitted");
@@ -23,11 +30,18 @@ socket.on('chat message', function(msg){
 	$('#messages').append($('<li>').text(msg));
 	$("#messages").scrollTop($("#messages")[0].scrollHeight);
 });
+$(document).ready(function(){
+	$('#m').keypress(function(e){
+		if(e.keyCode==13)
+			submitform()
+				$('#send').click();
+	});
+});
 		</script>
 		<style>
 * { margin: 0; padding: 0; box-sizing: border-box; }
 form { padding: 3px;  width: 100%; }
-form input { border: 0; padding: 10px; width: 90%; margin-right: .5%; }
+form input { border: 0; padding: 10px; width: 100%; margin-right: .5%; }
 form a { width: 9%; border: none; padding: 10px; }
 #messages { list-style-type: none; margin: 0; padding: 0; height: 150px; overflow: auto }
 #messages li { padding: 5px 10px; }
@@ -37,7 +51,7 @@ form a { width: 9%; border: none; padding: 10px; }
 	<body>
 
 		<div class="container">
-			<h2>Dynamic Tabs</h2>
+			<h2>Pitch</h2>
 			<ul class="nav nav-tabs">
 				<li class="active"><a data-toggle="tab" href="#rules">Rules</a></li>
 				<!-- <li class="disabled"><a data-toggle="tab" href="#game">Game</a></li> -->
@@ -57,7 +71,7 @@ form a { width: 9%; border: none; padding: 10px; }
 		<div id=chat class="well" style="position: fixed; bottom: 0; width: 100%">
 			<ul id="messages"></ul>
 			<form action="">
-				<input id="m" autocomplete="off" /><a href="javascript: submitform()">Search</a>
+				<input id="m" autocomplete="off" />
 			</form>
 		</div>
 	</body>

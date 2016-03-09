@@ -35,6 +35,8 @@
 	<script>
 	function game_create() {
 	document.getElementById("myForm").submit();
+	var x = document.getElementById("myForm");
+	socket.emit("new game", x.elements);
 	}
 	</script>
 
