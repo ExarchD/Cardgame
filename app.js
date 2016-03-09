@@ -16,7 +16,7 @@ gameport        = process.env.PORT || 4839,
 
 		verbose         = false,
 		app             = require('express')();
-		server          = require('http').createServer(app),
+server          = require('http').createServer(app),
 		io              = require('socket.io')(server),
 		fs = require("fs");
 var allclients = new Array(); //Array of clients
@@ -30,7 +30,7 @@ var bodyParser   = require('body-parser');
 app.use(morgan('dev')); // log every request to the console
 app.use(cookieParser()); // read cookies (needed for auth)
 app.use(bodyParser()); // get information from html forms
-app.use(express.static(__dirname + '/views'));
+app.use(express.static(__dirname));
 app.set('view engine', 'ejs');
 
 var fs = require('fs');
@@ -63,7 +63,7 @@ app.post('/general_lobby', function(req, res) {
 	res.redirect('/game_lobby');
 	//});
 	// sio.emit("hi");
-	});
+});
 
 //The express server handles passing our content to the browser,
 //As well as routing users where they need to go. This example is bare bones
@@ -72,9 +72,9 @@ app.post('/general_lobby', function(req, res) {
 
 //Tell the server to listen for incoming connections
 server.listen(gameport);
-	var toType = function(obj) {
-		return ({}).toString.call(obj).match(/\s([a-zA-Z]+)/)[1].toLowerCase()
-	}
+var toType = function(obj) {
+	return ({}).toString.call(obj).match(/\s([a-zA-Z]+)/)[1].toLowerCase()
+}
 
 //Log something so we know that it succeeded.
 console.log('\t :: Express :: Listening on port ' + gameport );
