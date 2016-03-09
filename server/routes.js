@@ -72,10 +72,6 @@ module.exports = function(app, passport, game_configs) {
 
 	// also pass the uuid, when people login, they should be connected to the appropriate room
 	app.get('/game_lobby', isLoggedIn, function(req, res) {
-		console.log(req.body.name);
-		console.log(req.body.name);
-		console.log(req.body.name);
-		console.log(req.body.name);
 		res.render('game_lobby.ejs', {
 			user : req.user // get the user out of session and pass to template
 		});
