@@ -14,22 +14,27 @@ var socket = io();
 socket.emit("subscribe", { room: "gameroom" });
 $(function(){
 	$('form').submit(function(){
-		submitform();
 		return false;
 	});
 });
 function submitform()
 {
-	console.log("form submitted");
-	socket.emit('chat message', $('#m').val());
+
+	var ugly =<%-JSON.stringify(user)%>
+		var data;
+	data = {};
+	data.username=ugly.user_name;
+	data.msg=$('#m').val();
+	console.log(data);
+	
+	socket.emit('chat message', data);
 	$('#m').val('');
 	return false;
 }
 socket.on('chat message', function(msg){
 	console.log("message recieved");
-	$('#messages').append($('<li>').text(msg));
-	$("#messages").scrollTop($("#messages")[0].scrollHeight);
-});
+	$("#messages").append(" <b>Appended text</b>.");
+	$("#messages").scrollTop($("#messages")[0].scrollHeight); });
 $(document).ready(function(){
 	$('#m').keypress(function(e){
 		if(e.keyCode==13)

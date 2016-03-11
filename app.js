@@ -16,10 +16,10 @@ gameport        = process.env.PORT || 4004,
 
 		verbose         = false,
 		app             = require('express')();
-server          = require('http').createServer(app),
+		server          = require('http').createServer(app),
 		io              = require('socket.io')(server),
-		fs = require("fs");
-var allclients = new Array(); //Array of clients
+		fs 		= require("fs");
+var allclients =[]; //Array of clients
 var passport = require('passport');
 var flash    = require('connect-flash');
 var session      = require('express-session');
@@ -35,15 +35,15 @@ app.set('view engine', 'ejs');
 
 var fs = require('fs');
 var path = __dirname + '/game/configs';
-var game_configs= new Array();
+var game_configs=[];
 var raw_configs=fs.readdirSync(path);
 raw_configs.forEach(function(entry) {
 	var res = entry.split(/[._]/);
 	var key1 = "game";
 	var key2 = "players";
 	var obj = {};
-	obj[key1] = res[1]
-		obj[key2] = res[2]
+	obj[key1] = res[1];
+		obj[key2] = res[2];
 		game_configs.push(obj);
 });
 
@@ -73,8 +73,8 @@ app.post('/general_lobby', function(req, res) {
 //Tell the server to listen for incoming connections
 server.listen(gameport);
 var toType = function(obj) {
-	return ({}).toString.call(obj).match(/\s([a-zA-Z]+)/)[1].toLowerCase()
-}
+	return ({}).toString.call(obj).match(/\s([a-zA-Z]+)/)[1].toLowerCase();
+};
 
 //Log something so we know that it succeeded.
 console.log('\t :: Express :: Listening on port ' + gameport );
@@ -93,7 +93,7 @@ var clientname;
 //Configure the socket.io connection settings.
 //See http://socket.io/
 
-var users =  new Array();
+var users =[];
 io.sockets.on('connection', function (client) {
 
 	client.on('player_login', function (data) {
@@ -128,7 +128,7 @@ io.sockets.on('connection', function (client) {
 	//Useful to know when someone connects
 	console.log('\t socket.io:: player ' + client.userid + ' connected');
 
-	client.on('new game', function(data) { console.log(data) });
+	client.on('new game', function(data) { console.log(data); });
 	// log into room
 	client.on('subscribe', function(data) { client.join(data.room); });
 
