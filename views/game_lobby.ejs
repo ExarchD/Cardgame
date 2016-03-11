@@ -26,14 +26,21 @@ function submitform()
 	data.username=ugly.user_name;
 	data.msg=$('#m').val();
 	console.log(data);
-	
+
 	socket.emit('chat message', data);
 	$('#m').val('');
 	return false;
 }
+var prevuser="";
 socket.on('chat message', function(msg){
 	console.log("message recieved");
-	$("#messages").append(" <b>Appended text</b>.");
+	if(msg.username==prevuser){
+		$("#messages").append(" <li>"+msg.msg+"</li>");
+	}
+	else {
+		$("#messages").append(" <li> <b>"+msg.username+": </b>"+msg.msg+"</li>");
+	}
+	prevuser=msg.username;
 	$("#messages").scrollTop($("#messages")[0].scrollHeight); });
 $(document).ready(function(){
 	$('#m').keypress(function(e){
@@ -42,6 +49,56 @@ $(document).ready(function(){
 				$('#send').click();
 	});
 });
+
+
+var count=5;
+var readyvalue="OFF";
+$(document).on('click', '.toggle-button', function() {
+	clearTimeout(); // doesn't cancel for some reason
+	$(this).toggleClass('toggle-button-selected'); 
+	if( readyvalue=="OFF"){
+		console.log("OFF to ON");
+		//		var counter=setInterval(function() { timer()} , 1000); //1000 will  run it every 1 second
+		//		count=5;
+		document.getElementById("timer").innerHTML="Game will start in 5 seconds"; // watch for spelling
+		setTimeout (function() {
+			document.getElementById("game_tab").className = "";
+			socket.emit("game_start", gameid);
+			// game_server_init()
+		}, 5000);
+		readyvalue="ON";}
+	else if(readyvalue=="ON"){
+		console.log("ON to OFF");
+		//		clearInterval(counter);
+		//		count=-9;
+		//		document.getElementById("timer").innerHTML="Countdown cancelled"; // watch for spelling
+		readyvalue="OFF";}
+});
+
+
+function game_server_init()
+{
+};
+
+function timer()
+{
+	count=count-1;
+	console.log(count);
+	if (count == 0)
+	{
+		document.getElementById("timer").innerHTML="Game starting"; // watch for spelling
+		return;
+		//game_server_init();
+
+	} else if ( count < 0 )
+	{
+		return;
+	}else if ( count > 0 )
+	{
+		document.getElementById("timer").innerHTML=count + " secs"; // watch for spelling
+	}
+};
+
 		</script>
 		<style>
 * { margin: 0; padding: 0; box-sizing: border-box; }
@@ -51,6 +108,10 @@ form a { width: 9%; border: none; padding: 10px; }
 #messages { list-style-type: none; margin: 0; padding: 0; height: 150px; overflow: auto }
 #messages li { padding: 5px 10px; }
 #messages li:nth-child(odd) { background: #eee; }
+.toggle-button { background-color: white; margin: 5px 0; border-radius: 20px; border: 2px solid #D0D0D0; height: 24px; cursor: pointer; width: 50px; position: relative; display: inline-block; user-select: none; -webkit-user-select: none; -ms-user-select: none; -moz-user-select: none; }
+.toggle-button button { cursor: pointer; outline: 0; display:block; position: absolute; left: 0; top: 0; border-radius: 100%; width: 30px; height: 30px; background-color: white; float: left; margin: -5px 0 0 -3px; border: 2px solid #D0D0D0; transition: left 0.3s; }
+.toggle-button-selected { background-color: #83B152; border: 2px solid #7DA652; }
+.toggle-button-selected button { left: 26px; top: 0; margin: -2px 0 0 0px; border: none; width: 24px; height: 24px; box-shadow: 0 0 4px rgba(0,0,0,0.1); }
 		</style>
 	</head>
 	<body>
@@ -59,13 +120,16 @@ form a { width: 9%; border: none; padding: 10px; }
 			<h2>Pitch</h2>
 			<ul class="nav nav-tabs">
 				<li class="active"><a data-toggle="tab" href="#rules">Rules</a></li>
-				<!-- <li class="disabled"><a data-toggle="tab" href="#game">Game</a></li> -->
-				<li><a data-toggle="tab" href="#game">Game</a></li>
-				<li style="float:right"><a href="/logout">Quit</a></li>
+				<li id="game_tab" class="disabled"><a data-toggle="tab" href="#game">Game</a></li>
+				<li style="float:right"><a href="/general_lobby">Quit</a></li>
 			</ul>
 
 			<div class="tab-content">
 				<div id="rules" class="tab-pane fade in active">
+					<div  style="float:right" class="toggle-button">
+						<button id="readied" >Go</button>
+					</div>
+					<span id="timer" style="float:right" ></span>
 					These are the rules of the current game
 				</div>
 				<div id="game" class="tab-pane fade">
@@ -73,13 +137,36 @@ form a { width: 9%; border: none; padding: 10px; }
 				</div>
 			</div>
 		</div>
-		<div id=chat class="well" style="position: fixed; bottom: 0; width: 100%">
-			<ul id="messages"></ul>
-			<form action="">
-				<input id="m" autocomplete="off" />
-			</form>
+
+		<div class="container-fluid">
+			<div class="row" style="float: right; position: fixed; bottom: 0; width: 100%;">
+				<div class="col-md-1">
+				</div>
+				<div class="col-md-1">
+				</div>
+				<div class="col-md-8">
+					<div id=chat class="well">
+						<ul id="messages"></ul>
+						<form action="">
+							<input id="m" autocomplete="off" />
+						</form>
+					</div>
+				</div>
+				<div class="col-md-1">
+					<div id=playerlist class="well" >
+						<ul id="players" style="list-style-type: none;">
+							<li>Player1 *</li>
+							<li>Player2 *</li>
+							<li>Player3 *</li>
+							<li>Player4 *</li>
+							<li>Player5 *</li>
+						</ul>
+					</div>
+				</div>
+				<div class="col-md-1">
+				</div>
+			</div>
 		</div>
 	</body>
 
 </html>
-
