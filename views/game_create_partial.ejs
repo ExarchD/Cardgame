@@ -19,7 +19,6 @@
 			<input style="float:right" type="password" name="pass">
 			</br>
 			<br>
-			<!-- <button style="float:right" type="button" onclick="alert('Hello World!')">Create Game!</button> -->
 			<button style="float:right" type="button" onclick=game_create()>Create Game!</button>
 			</br>
 
@@ -34,10 +33,17 @@
 
 	<script>
 	function game_create() {
+	socket.emit("get uuid");
+	};
+
+	socket.on('send uuid', function( data )
+	{
+	document.getElementById('UUID').value = data;
 	document.getElementById("myForm").submit();
 	var x = document.getElementById("myForm");
 	socket.emit("new game", x.elements);
-	}
+	});
+	
 	</script>
 
 </div>

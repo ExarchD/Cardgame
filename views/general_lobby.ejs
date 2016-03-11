@@ -26,6 +26,10 @@ var ugly =<%-JSON.stringify(user)%>
 var ugly2=<%-JSON.stringify(games)%>
 console.log(ugly2[0].players);
 socket.emit("player_login", ugly.user_name);
+
+	function debug_create() {
+	socket.emit("new game", "debug");
+	}
 		</script>
 		<style>
 body        { padding-top:80px; word-wrap:break-word; }
@@ -60,9 +64,9 @@ body        { padding-top:80px; word-wrap:break-word; }
 								<td>50</td>
 							</tr>
 							<tr>
-								<td>Eve</td>
-								<td>Jackson</td> 
-								<td>94</td>
+								<td>Debug</td>
+								<td>0/1</td> 
+								<td><a onclick="">Join</a></td>
 							</tr>
 						</table>
 					</div>

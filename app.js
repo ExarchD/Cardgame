@@ -15,10 +15,11 @@ gameport        = process.env.PORT || 4004,
 		UUID            = require('node-uuid'),
 
 		verbose         = false,
-		app             = require('express')();
+		app             = require('express')(),
 		server          = require('http').createServer(app),
 		io              = require('socket.io')(server),
 		fs 		= require("fs");
+
 var allclients =[]; //Array of clients
 var passport = require('passport');
 var flash    = require('connect-flash');
@@ -43,8 +44,8 @@ raw_configs.forEach(function(entry) {
 	var key2 = "players";
 	var obj = {};
 	obj[key1] = res[1];
-		obj[key2] = res[2];
-		game_configs.push(obj);
+	obj[key2] = res[2];
+	game_configs.push(obj);
 });
 
 // var sio = io.listen(server);
@@ -94,6 +95,7 @@ var clientname;
 //See http://socket.io/
 
 var users =[];
+var activegames =[];
 io.sockets.on('connection', function (client) {
 
 	client.on('player_login', function (data) {
@@ -128,7 +130,29 @@ io.sockets.on('connection', function (client) {
 	//Useful to know when someone connects
 	console.log('\t socket.io:: player ' + client.userid + ' connected');
 
-	client.on('new game', function(data) { console.log(data); });
+
+	client.on('get uuid', function() { 
+		var gameid=UUID();
+		client.emit('send uuid', gameid);
+	});
+
+	client.on('new game', function(data) { 
+		console.log(data);
+		if (data == "debug")
+		{
+		var key1 = "gameid";
+		var key2 = "players";
+		var key3 = "gametype";
+		var key4 = "playing";
+		var obj = {};
+			obj[key1] = gameid;
+			obj[key2] = "debug";
+			obj[key3] = "debug";
+			obj[key4] = 0;
+			activegames.push(obj);
+		}
+	});
+
 	// log into room
 	client.on('subscribe', function(data) { client.join(data.room); });
 
