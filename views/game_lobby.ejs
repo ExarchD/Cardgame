@@ -11,7 +11,8 @@
 		<script src="http://code.jquery.com/jquery-1.11.1.js"></script>
 		<script type='text/javascript'>
 var socket = io();
-socket.emit("subscribe", { room: "gameroom" });
+var ugly1 =<%-JSON.stringify(gameid);%>
+socket.emit("subscribe", { room: ugly1.gameid });
 $(function(){
 	$('form').submit(function(){
 		return false;
@@ -64,7 +65,7 @@ $(document).on('click', '.toggle-button', function() {
 		setTimeout (function() {
 			document.getElementById("game_tab").className = "";
 			socket.emit("game_start", gameid);
-			// game_server_init()
+			game_server_init()
 		}, 5000);
 		readyvalue="ON";}
 	else if(readyvalue=="ON"){
@@ -78,6 +79,7 @@ $(document).on('click', '.toggle-button', function() {
 
 function game_server_init()
 {
+	socket.emit("launch game", ugly1.gameid);
 };
 
 function timer()

@@ -1,3 +1,4 @@
+
 ////// Start Card class //////
 
 // Member variables for Card class:
@@ -218,8 +219,15 @@ Player.prototype.sortHand = function sortHand()
 ////// Start Game class //////
 
 // The two variables passed in are going to come from the server setting up the lobby.
-function GameConfig( gameTypeID, playerArray)
+function GameConfig( gameTypeID,  gameNameID )
 {
+
+	// init a socket instance
+	// join the 'room' which is defined by the gameNameID
+	//
+	// query other sockets in the room to define a list of players
+
+
 	this.gameType = gameTypeID;
 	this.players = playerArray;
 	

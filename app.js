@@ -96,6 +96,7 @@ var clientname;
 
 var users =[];
 var activegames =[];
+game_server = require('./game_server.js');
 io.sockets.on('connection', function (client) {
 
 	client.on('player_login', function (data) {
@@ -137,24 +138,41 @@ io.sockets.on('connection', function (client) {
 	});
 
 	client.on('new game', function(data) { 
-		console.log(data);
-		if (data == "debug")
-		{
 		var key1 = "gameid";
 		var key2 = "players";
 		var key3 = "gametype";
 		var key4 = "playing";
 		var obj = {};
+		if (data == "debug")
+		{
+			var gameid=UUID();
 			obj[key1] = gameid;
-			obj[key2] = "debug";
-			obj[key3] = "debug";
+			obj[key2] = 1;
+			obj[key3] = gametype;
 			obj[key4] = 0;
 			activegames.push(obj);
 		}
+		else
+		{
+			obj[key1] = data.gameid;
+			obj[key2] = game_configs[data.gametype].players;
+			obj[key3] = game_configs[data.gametype].game;
+			obj[key4] = 0;
+			activegames.push(obj);
+		}
+		console.log(obj);
 	});
 
 	// log into room
-	client.on('subscribe', function(data) { client.join(data.room); });
+	client.on('subscribe', function(data) {
+		console.log(data.room);
+		client.join(data.room); });
+
+	client.on('launch game', function(data) {
+		console.log(data);
+
+		});
+
 
 	// log out of room
 	client.on('unsubscribe', function(data) { client.leave(data.room); });

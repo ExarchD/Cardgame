@@ -3,7 +3,7 @@
 		<form id=myForm action="/general_lobby" method="post">
 			<br>
 			Available games:
-			<select style="float:right", name="type">
+			<select id="typevalue" style="float:right", name="type">
 				<% var ugly2=games%>
 				<% for (i=0; i < ugly2.length; i++) { %>
 				<option value="<%= i %>"><%=ugly2[i].game+"("+ugly2[i].players+" player)"%></option>    
@@ -12,11 +12,12 @@
 			</br>
 			<br>
 			Game name:
-			<input style="float:right" type="text" name="name">
+			<input id="gamename" style="float:right" type="text" name="name">
 			</br>
 			<br>
+			<input id="gameid" type="hidden" name="gameid" value="Norway">
 			Password:
-			<input style="float:right" type="password" name="pass">
+			<input id="password" style="float:right" type="password" name="pass">
 			</br>
 			<br>
 			<button style="float:right" type="button" onclick=game_create()>Create Game!</button>
@@ -38,10 +39,19 @@
 
 	socket.on('send uuid', function( data )
 	{
-	document.getElementById('UUID').value = data;
+	document.getElementById("gameid").value = data;
+	console.log(data);
+		var key1 = "gameid";
+		var key2 = "gametype";
+		var key3 = "gamename";
+		var key4 = "password";
+		var obj = {};
+			obj[key1] = data;
+			obj[key2] = document.getElementById("typevalue").value;
+			obj[key3] = document.getElementById("gamename").value;
+			obj[key4] = document.getElementById("password").value;
+	socket.emit("new game", obj);
 	document.getElementById("myForm").submit();
-	var x = document.getElementById("myForm");
-	socket.emit("new game", x.elements);
 	});
 	
 	</script>
