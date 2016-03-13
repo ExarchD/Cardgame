@@ -96,7 +96,7 @@ var clientname;
 
 var users =[];
 var activegames =[];
-game_server = require('./game_server.js');
+game_server = require('./game/game_server.js');
 io.sockets.on('connection', function (client) {
 
 	client.on('player_login', function (data) {
@@ -137,6 +137,7 @@ io.sockets.on('connection', function (client) {
 		client.emit('send uuid', gameid);
 	});
 
+	// consolidate 'new game' and 'launch game' into one function
 	client.on('new game', function(data) { 
 		var key1 = "gameid";
 		var key2 = "players";
@@ -165,17 +166,24 @@ io.sockets.on('connection', function (client) {
 
 	// log into room
 	client.on('subscribe', function(data) {
-		console.log(data.room);
+		console.log("joining room: " + data.room);
+		client.room=data.room;
 		client.join(data.room); });
 
-	client.on('launch game', function(data) {
-		console.log(data);
-
+	client.on('join game', function(data) {
+		game_server.findGame(client, data);
 		});
 
 
 	// log out of room
 	client.on('unsubscribe', function(data) { client.leave(data.room); });
+
+	client.on('find players', function() {
+		console.log("the room of the client is: " + client.root);
+		// client.emit('list of players',io.sockets.rooms[client.room]);
+	
+	});
+
 
 	client.on('chat message', function(msg){
 		console.log('\t socket.io::chat message ' + msg);

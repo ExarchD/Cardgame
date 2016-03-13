@@ -1137,12 +1137,16 @@ game_core.prototype.client_ondisconnect = function(data) {
 
 game_core.prototype.client_connect_to_server = function() {
         
-            //Store a local reference to our connection to the server
-        this.socket = io.connect();
+	//Store a local reference to our connection to the server
+	console.log("connecting io");
+	this.socket = io.connect();
+	console.log("connected io");
 
             //When we connect, we are not 'connected' until we have a server id
             //and are placed in a game by the server. The server sends us a message for that.
         this.socket.on('connect', function(){
+		console.log("definitely connected io");
+
             this.players.self.state = 'connecting';
         }.bind(this));
 

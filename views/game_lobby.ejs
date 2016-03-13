@@ -12,6 +12,7 @@
 		<script type='text/javascript'>
 var socket = io();
 var ugly1 =<%-JSON.stringify(gameid);%>
+console.log(ugly1);
 socket.emit("subscribe", { room: ugly1.gameid });
 $(function(){
 	$('form').submit(function(){
@@ -64,7 +65,6 @@ $(document).on('click', '.toggle-button', function() {
 		document.getElementById("timer").innerHTML="Game will start in 5 seconds"; // watch for spelling
 		setTimeout (function() {
 			document.getElementById("game_tab").className = "";
-			socket.emit("game_start", gameid);
 			game_server_init()
 		}, 5000);
 		readyvalue="ON";}
@@ -79,7 +79,7 @@ $(document).on('click', '.toggle-button', function() {
 
 function game_server_init()
 {
-	socket.emit("launch game", ugly1.gameid);
+	socket.emit("join game", ugly1);
 };
 
 function timer()
