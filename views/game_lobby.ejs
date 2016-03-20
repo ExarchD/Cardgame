@@ -52,6 +52,9 @@ $(document).ready(function(){
 	});
 });
 
+socket.on('find game', function(){
+    console.log("finding game");
+});
 
 var count=5;
 var readyvalue="OFF";
@@ -79,6 +82,7 @@ $(document).on('click', '.toggle-button', function() {
 
 function game_server_init()
 {
+    console.log("socket::join game " + ugly1.gameid);
 	socket.emit("join game", ugly1);
 };
 

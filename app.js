@@ -75,4 +75,4 @@ var toType = function(obj) {
 
 //Log something so we know that it succeeded.
 console.log('\t :: Express :: Listening on port ' + gameport );
-require('./server/sockets')(server, app);
+require('./server/sockets')(server, app, game_configs);

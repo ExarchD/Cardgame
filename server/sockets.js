@@ -1,10 +1,9 @@
-
-module.exports = function(server) {
+module.exports = function(server,app, game_configs) {
 	var io              = require('socket.io')(server);
 	var UUID            = require('node-uuid');
 	var allclients =[]; //Array of clients
 	var users =[];
-	game_server = require('./game_server.js')(io);
+	game_server = require('./game_server.js');
 	io.sockets.on('connection', function (client) {
 
 		client.on('player_login', function (data) {
@@ -60,9 +59,8 @@ module.exports = function(server) {
 				var gameid=UUID();
 				obj[key1] = gameid;
 				obj[key2] = 1;
-				obj[key3] = gametype;
+				obj[key3] = Pitch;
 				obj[key4] = 0;
-				activegames.push(obj);
 			}
 			else
 			{
@@ -70,9 +68,8 @@ module.exports = function(server) {
 				obj[key2] = game_configs[data.gametype].players;
 				obj[key3] = game_configs[data.gametype].game;
 				obj[key4] = 0;
-				activegames.push(obj);
 			}
-			console.log(obj);
+                        game_server.createGame(client, obj);
 		});
 
 		// log into room
@@ -82,6 +79,7 @@ module.exports = function(server) {
 			client.join(data.room); });
 
 		client.on('join game', function(data) {
+                    console.log(data);
 			game_server.findGame(client, data);
 		});
 
@@ -117,6 +115,9 @@ module.exports = function(server) {
 		});
 
 
+		client.on('list games', function(){
+                    game_server.listGames();
+		});
 
 
 		client.on('chat message', function(msg){
@@ -156,5 +157,4 @@ module.exports = function(server) {
 		}); //client.on disconnect
 
 		}); //sio.sockets.on connection
-		console.log("starting server");
 	};

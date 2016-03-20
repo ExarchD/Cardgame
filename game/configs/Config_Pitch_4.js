@@ -54,7 +54,6 @@ function config_pitch_4( playerArray )
 	var iLowCardOwner = 0;
 	
 	
-	
 	//******************Initializing game, checking that player array is set up correctly
 		
 	//Checking that the right number of players were passed in
