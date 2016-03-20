@@ -25,6 +25,7 @@ var socket = io();
 var ugly =<%-JSON.stringify(user)%>
 var ugly2=<%-JSON.stringify(games)%>
 console.log(ugly2[0].players);
+socket.emit("getd");
 socket.emit("player_login", ugly.user_name);
 
 	function debug_create() {
